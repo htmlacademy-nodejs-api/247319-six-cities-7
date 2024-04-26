@@ -1,7 +1,7 @@
-import { readFileSync } from "node:fs";
-import chalk from "chalk";
-import { FileReader } from "./file-reader.interface.js";
-import { Place, City, TypePlace, Benefits, User } from "../../types/index.js";
+import { readFileSync } from 'node:fs';
+import chalk from 'chalk';
+import { FileReader } from './file-reader.interface.js';
+import { Place, City, TypePlace, Benefits, User } from '../../types/index.js';
 
 export class TSVFileReader implements FileReader {
   private rawData = '';
@@ -12,7 +12,7 @@ export class TSVFileReader implements FileReader {
 
   private validateRawData(): void {
     if (! this.rawData) {
-      throw new Error(chalk.red(`File was not read`));
+      throw new Error(chalk.red('File was not read'));
     }
   }
 
@@ -82,13 +82,13 @@ export class TSVFileReader implements FileReader {
     const parsedBenefits: Benefits[] = [];
 
     for (const benefit of benefitsArray) {
-        const trimmedBenefit = benefit.trim();
+      const trimmedBenefit = benefit.trim();
 
-        if (Object.values(Benefits).includes(trimmedBenefit as Benefits)) {
-            parsedBenefits.push(trimmedBenefit as Benefits);
-        } else {
-            throw new Error(`Unknown benefit: ${trimmedBenefit}`);
-        }
+      if (Object.values(Benefits).includes(trimmedBenefit as Benefits)) {
+        parsedBenefits.push(trimmedBenefit as Benefits);
+      } else {
+        throw new Error(`Unknown benefit: ${trimmedBenefit}`);
+      }
     }
 
     return parsedBenefits;
@@ -103,7 +103,7 @@ export class TSVFileReader implements FileReader {
   }
 
   private parseStringToFloatNumber(value: string): number {
-    return Number.parseFloat(value)
+    return Number.parseFloat(value);
   }
 
   public read(): void {

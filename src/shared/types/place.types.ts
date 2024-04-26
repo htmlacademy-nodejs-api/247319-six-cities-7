@@ -1,7 +1,7 @@
-import { City } from "./city.enum.js";
-import { TypePlace } from "./type-place.enum.js";
-import { Benefits } from "./benefits.enum.js";
-import { User } from "./user.types.js";
+import { City } from './city.enum.js';
+import { TypePlace } from './type-place.enum.js';
+import { Benefits } from './benefits.enum.js';
+import { User } from './user.types.js';
 
 export type Place = {
   title: string;
