@@ -48,8 +48,6 @@ export class TSVFileReader implements FileReader {
       longitude
     ] = line.split('\t');
 
-    const isPremiumBoolean = isPremium === 'true';
-    const isFavoriteBoolean = isFavorite === 'true';
     const isProBoolean = isPro === 'true';
 
     return {
@@ -58,23 +56,19 @@ export class TSVFileReader implements FileReader {
       postDate: new Date(postDate),
       city: City[city as keyof typeof City],
       previewImage,
-      images: this.parseImages(images),
-      isPremium: isPremiumBoolean,
-      isFavorite: isFavoriteBoolean,
-      rating: this.parseStringToNumber(rating),
+      images: images.split(';'),
+      isPremium: isPremium === 'true',
+      isFavorite: isFavorite === 'true',
+      rating: Number.parseFloat(rating),
       typePlace: TypePlace[typePlace as keyof typeof TypePlace],
-      bedrooms: this.parseStringToNumber(bedrooms),
-      guests: this.parseStringToNumber(guests),
-      price: this.parseStringToNumber(price),
+      bedrooms: Number(bedrooms),
+      guests: Number(guests),
+      price: Number(price),
       benefits: this.parseBenefits(benefits),
       author: this.parseAuthor(name, email, avatarUrl, password, isProBoolean),
-      latitude: this.parseStringToFloatNumber(latitude),
-      longitude: this.parseStringToFloatNumber(longitude),
+      latitude: Number.parseFloat(latitude),
+      longitude: Number.parseFloat(longitude),
     };
-  }
-
-  private parseImages(imagesString: string): string[] {
-    return imagesString.split(';');
   }
 
   private parseBenefits(benefitsString: string): Benefits[] {
@@ -96,14 +90,6 @@ export class TSVFileReader implements FileReader {
 
   private parseAuthor(name: string, email: string, avatarUrl: string, password: string, isPro: boolean): User {
     return {name, email, avatarUrl, password, isPro};
-  }
-
-  private parseStringToNumber(value: string): number {
-    return Number.parseInt(value, 10);
-  }
-
-  private parseStringToFloatNumber(value: string): number {
-    return Number.parseFloat(value);
   }
 
   public read(): void {
