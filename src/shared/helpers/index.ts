@@ -1,1 +1,7 @@
-export { generateRandomValue, getRandomItems, getRandomItem } from './common.js';
+export {
+  generateRandomValue,
+  getRandomItems,
+  getRandomItem,
+  generateRandomRating,
+  getRandomBoolean
+} from './common.js';
