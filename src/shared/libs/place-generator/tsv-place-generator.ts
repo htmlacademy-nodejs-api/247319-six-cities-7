@@ -3,19 +3,29 @@ import { Benefits } from '../../types/benefits.enum.js';
 import { MockServerData } from '../../types/mock-server-data.types.js';
 import { TypePlace } from '../../types/type-place.enum.js';
 import { PlaceGenerator } from './place-generator.interface.js';
-import { MIN_PRICE, MAX_PRICE, MIN_RATING, MAX_RATING, MIN_BEDROOMS, MAX_BEDROOMS, MIN_GUESTS, MAX_GUESTS, FIRST_WEEK_DAY, LAST_WEEK_DAY } from './const.js';
 import dayjs from 'dayjs';
+
+const MIN_PRICE = 10;
+const MAX_PRICE = 100000;
+const MIN_RATING = 1;
+const MAX_RATING = 5;
+const MIN_BEDROOMS = 1;
+const MAX_BEDROOMS = 8;
+const MIN_GUESTS = 1;
+const MAX_GUESTS = 10;
+const FIRST_WEEK_DAY = 1;
+const LAST_WEEK_DAY = 7;
 
 export class TSVPlaceGenerator implements PlaceGenerator {
   constructor(private readonly mockData: MockServerData) {}
 
   public generate(): string {
-    const title = getRandomItem<string>(this.mockData.titles);
-    const description = getRandomItems<string>(this.mockData.descriptions).join(';');
+    const title = getRandomItem(this.mockData.titles);
+    const description = getRandomItems(this.mockData.descriptions).join(';');
     const postDate = dayjs().subtract(generateRandomValue(FIRST_WEEK_DAY, LAST_WEEK_DAY), 'day').toISOString();
-    const city = getRandomItem<string>(this.mockData.cities);
-    const previewImage = getRandomItem<string>(this.mockData.previewImages);
-    const images = getRandomItems<string>(this.mockData.images).join(';');
+    const city = getRandomItem(this.mockData.cities);
+    const previewImage = getRandomItem(this.mockData.previewImages);
+    const images = getRandomItems(this.mockData.images).join(';');
     const isPremium = getRandomBoolean();
     const isFavorite = getRandomBoolean();
     const rating = generateRandomRating(MIN_RATING, MAX_RATING).toString();

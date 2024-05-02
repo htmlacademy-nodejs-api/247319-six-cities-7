@@ -42,7 +42,6 @@ export class TSVFileReader implements FileReader {
       name,
       email,
       avatarUrl,
-      password,
       isPro,
       latitude,
       longitude
@@ -65,7 +64,7 @@ export class TSVFileReader implements FileReader {
       guests: Number(guests),
       price: Number(price),
       benefits: this.parseBenefits(benefits),
-      author: this.parseAuthor(name, email, avatarUrl, password, isProBoolean),
+      author: this.parseAuthor(name, email, avatarUrl, isProBoolean),
       latitude: Number.parseFloat(latitude),
       longitude: Number.parseFloat(longitude),
     };
@@ -88,8 +87,8 @@ export class TSVFileReader implements FileReader {
     return parsedBenefits;
   }
 
-  private parseAuthor(name: string, email: string, avatarUrl: string, password: string, isPro: boolean): User {
-    return {name, email, avatarUrl, password, isPro};
+  private parseAuthor(name: string, email: string, avatarUrl: string, isPro: boolean): User {
+    return {name, email, avatarUrl, isPro};
   }
 
   public read(): void {

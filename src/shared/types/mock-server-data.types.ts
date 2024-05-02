@@ -17,6 +17,6 @@ export type MockServerData = {
   emails: string[];
   avatarsUrl: string[];
   isPro: boolean;
-  latitudes: string[];
   longitudes: string[];
+  latitudes: string[];
 };
