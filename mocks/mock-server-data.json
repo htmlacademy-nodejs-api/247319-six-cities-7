@@ -1,0 +1,95 @@
+{
+  "api": {
+    "titles": [
+      "The Joshua Tree House",
+      "Beautiful & luxurious apartment at great location",
+      "Canal View Prinsengracht",
+      "Loft Studio in the Central Area",
+      "The Pondhouse - A Magical Place"
+    ],
+    "descriptions": [
+      "Peaceful studio in the most wanted area in town. Quiet house Near of everything. Completely renovated.",
+      "Lovely neighbourhood, lot of trendy shops, restaurants and bars in a walking distance.",
+      "The house is very good, very happy, hygienic and simple living conditions around it are also very good.",
+      "A new spacious villa, one floor. All commodities, jacuzzi and beautiful scenery. Ideal for families or friends.",
+      "This is a place for dreamers to reset, reflect, and create. Designed with a 'slow' pace in mind, our hope is that you enjoy every part of your stay; from making local coffee by drip in the morning, choosing the perfect record to put on as the sun sets."
+    ],
+    "cities": [
+      "Paris",
+      "Amsterdam",
+      "Cologne",
+      "Hamburg",
+      "Dusseldorf",
+      "Brussels"
+    ],
+    "previewImages": [
+      "apartment-11.jpg",
+      "apartment-05.jpg",
+      "apartment-07.jpg",
+      "house-02.jpg",
+      "room-06.jpg"
+    ],
+    "images": [
+      "house-07.jpg",
+      "house-05.jpg",
+      "house-11.jpg",
+      "room-16.jpg",
+      "apartment-19.jpg"
+    ],
+    "typesPlace": [
+      "House",
+      "Apartment",
+      "Hotel",
+      "Room"
+    ],
+    "benefits": [
+      "Breakfast",
+      "Air conditioning",
+      "Laptop friendly workspace",
+      "Baby seat",
+      "Washer",
+      "Towels",
+      "Fridge"
+    ],
+    "authors": [
+      "Roman",
+      "Evgeniya",
+      "Arina",
+      "Olga",
+      "Alexander",
+      "Maksim"
+    ],
+    "emails": [
+      "Roman@gmail.com",
+      "Evgeniya@gmail.com",
+      "Arina@gmail.com",
+      "Olga@gmail.com",
+      "Alexander@gmail.com",
+      "Maksim@gmail.com"
+    ],
+    "avatarsUrl": [
+      "roman.jpg",
+      "evgeniya-05.jpg",
+      "arina-11.jpg",
+      "olga-16.jpg",
+      "alexander-19.jpg",
+      "maksim-28.jpg"
+    ],
+    "latitudes": [
+      "48.85661",
+      "50.938361",
+      "50.846557",
+      "52.370216",
+      "53.550341",
+      "51.225402"
+    ],
+    "longitudes": [
+      "2.351499",
+      "6.959974",
+      "4.351697",
+      "4.895168",
+      "10.000654",
+      "6.776314"
+    ]
+  }
+}
