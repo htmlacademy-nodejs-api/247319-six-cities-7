@@ -43,7 +43,7 @@ export class TSVPlaceGenerator implements PlaceGenerator {
 
     return [
       title, description, postDate, city, previewImage, images, isPremium, isFavorite, rating,
-      typePlace, bedrooms, guests, price, benefits, author, email, avatarUrl, isPro, longitude, latitude
+      typePlace, bedrooms, guests, price, benefits, author, email, avatarUrl, isPro, latitude, longitude
     ].join('\t');
   }
 }
