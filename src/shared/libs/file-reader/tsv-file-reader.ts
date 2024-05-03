@@ -70,7 +70,7 @@ export class TSVFileReader extends EventEmitter implements FileReader {
       if (Object.values(Benefits).includes(trimmedBenefit as Benefits)) {
         parsedBenefits.push(trimmedBenefit as Benefits);
       } else {
-        throw new Error(`Unknown benefit: ${trimmedBenefit}`);
+        console.error(`Unknown benefit: ${trimmedBenefit}`);
       }
     }
 
