@@ -1,26 +1,16 @@
-import { readFileSync } from 'node:fs';
-import chalk from 'chalk';
+import EventEmitter from 'node:events';
+import { createReadStream } from 'node:fs';
+import 'tslib';
 import { FileReader } from './file-reader.interface.js';
 import { Place, City, TypePlace, Benefits, User } from '../../types/index.js';
 
-export class TSVFileReader implements FileReader {
-  private rawData = '';
+export class TSVFileReader extends EventEmitter implements FileReader {
+  private CHUNK_SIZE = 16384;
 
   constructor(
     private readonly filename: string
-  ) {}
-
-  private validateRawData(): void {
-    if (! this.rawData) {
-      throw new Error(chalk.red('File was not read'));
-    }
-  }
-
-  private parseRawDataToPlaces(): Place[] {
-    return this.rawData
-      .split('\n')
-      .filter((row) => row.trim().length > 0)
-      .map((line) => this.parseLineToPlace(line));
+  ) {
+    super();
   }
 
   private parseLineToPlace(line: string): Place {
@@ -91,12 +81,29 @@ export class TSVFileReader implements FileReader {
     return {name, email, avatarUrl, isPro};
   }
 
-  public read(): void {
-    this.rawData = readFileSync(this.filename, { encoding: 'utf-8' });
-  }
+  public async read(): Promise<void> {
+    const readStream = createReadStream(this.filename, {
+      highWaterMark: this.CHUNK_SIZE,
+      encoding: 'utf-8',
+    });
 
-  public toArray(): Place[] {
-    this.validateRawData();
-    return this.parseRawDataToPlaces();
+    let remainingData = '';
+    let nextLinePosition = -1;
+    let importedRowCount = 0;
+
+    for await (const chunk of readStream) {
+      remainingData += chunk.toString();
+
+      while ((nextLinePosition = remainingData.indexOf('\n')) >= 0) {
+        const completeRow = remainingData.slice(0, nextLinePosition + 1);
+        remainingData = remainingData.slice(++nextLinePosition);
+        importedRowCount++;
+
+        const parsedPlace = this.parseLineToPlace(completeRow);
+        this.emit('line', parsedPlace);
+      }
+    }
+
+    this.emit('end', importedRowCount);
   }
 }

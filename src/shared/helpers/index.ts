@@ -3,5 +3,6 @@ export {
   getRandomItems,
   getRandomItem,
   generateRandomRating,
-  getRandomBoolean
+  getRandomBoolean,
+  getErrorMessage
 } from './common.js';

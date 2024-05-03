@@ -19,3 +19,7 @@ export function getRandomItem<T>(items: T[]):T {
 export function getRandomBoolean(): boolean {
   return Math.random() < 0.5;
 }
+
+export function getErrorMessage(error: unknown): string {
+  return error instanceof Error ? error.message : '';
+}
