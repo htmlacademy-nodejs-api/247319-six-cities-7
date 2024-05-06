@@ -1,7 +1,5 @@
 import { generateRandomRating, generateRandomValue, getRandomBoolean, getRandomItem, getRandomItems } from '../../helpers/common.js';
-import { Benefits } from '../../types/benefits.enum.js';
-import { MockServerData } from '../../types/mock-server-data.types.js';
-import { TypePlace } from '../../types/type-place.enum.js';
+import { Benefits, MockServerData, TypePlace } from '../../types/index.js';
 import { PlaceGenerator } from './place-generator.interface.js';
 import dayjs from 'dayjs';
 
@@ -34,16 +32,14 @@ export class TSVPlaceGenerator implements PlaceGenerator {
     const guests = generateRandomValue(MIN_GUESTS, MAX_GUESTS).toString();
     const price = generateRandomValue(MIN_PRICE, MAX_PRICE).toString();
     const benefits = getRandomItems([Benefits.AirConditioning, Benefits.BabySeat, Benefits.Breakfast, Benefits.Fridge, Benefits.Laptop, Benefits.Towels, Benefits.Washer]).join(';');
-    const author = getRandomItem(this.mockData.authors);
-    const email = getRandomItem(this.mockData.emails);
-    const avatarUrl = getRandomItem(this.mockData.avatarsUrl);
+    const user = getRandomItem(this.mockData.user);
     const isPro = getRandomBoolean();
-    const longitude = getRandomItem<string>(this.mockData.longitudes);
-    const latitude = getRandomItem<string>(this.mockData.latitudes);
+    const latitude = city.location.latitude;
+    const longitude = city.location.longitude;
 
     return [
-      title, description, postDate, city, previewImage, images, isPremium, isFavorite, rating,
-      typePlace, bedrooms, guests, price, benefits, author, email, avatarUrl, isPro, latitude, longitude
+      title, description, postDate, city.name, previewImage, images, isPremium, isFavorite, rating,
+      typePlace, bedrooms, guests, price, benefits, user.name, user.email, user.avatarUrl, isPro, latitude, longitude
     ].join('\t');
   }
 }

@@ -1,8 +1,11 @@
+import { City } from './city.types.js';
+import { User } from './user.types.js';
+
 export type MockServerData = {
   titles: string[];
   descriptions: string[];
   postDate: Date;
-  cities: string[];
+  cities: City[];
   previewImages: string[];
   images: string[];
   isPremium: boolean;
@@ -13,9 +16,7 @@ export type MockServerData = {
   guests: number;
   price: number;
   benefits: string[];
-  authors: string[];
-  emails: string[];
-  avatarsUrl: string[];
+  user: User[];
   isPro: boolean;
   longitudes: string[];
   latitudes: string[];

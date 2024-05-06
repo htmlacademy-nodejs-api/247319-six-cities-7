@@ -2,7 +2,7 @@ import EventEmitter from 'node:events';
 import { createReadStream } from 'node:fs';
 import 'tslib';
 import { FileReader } from './file-reader.interface.js';
-import { Place, City, TypePlace, Benefits, User } from '../../types/index.js';
+import { Place, TypePlace, Benefits, City } from '../../types/index.js';
 
 export class TSVFileReader extends EventEmitter implements FileReader {
   private CHUNK_SIZE = 16384;
@@ -43,7 +43,7 @@ export class TSVFileReader extends EventEmitter implements FileReader {
       title,
       description,
       postDate: new Date(postDate),
-      city: City[city as keyof typeof City],
+      city: city as unknown as City,
       previewImage,
       images: images.split(';'),
       isPremium: isPremium === 'true',
@@ -54,7 +54,12 @@ export class TSVFileReader extends EventEmitter implements FileReader {
       guests: Number(guests),
       price: Number(price),
       benefits: this.parseBenefits(benefits),
-      author: this.parseAuthor(name, email, avatarUrl, isProBoolean),
+      user: {
+        name: name,
+        email: email,
+        avatarUrl: avatarUrl,
+        isPro: isProBoolean
+      },
       latitude: Number.parseFloat(latitude),
       longitude: Number.parseFloat(longitude),
     };
@@ -75,10 +80,6 @@ export class TSVFileReader extends EventEmitter implements FileReader {
     }
 
     return parsedBenefits;
-  }
-
-  private parseAuthor(name: string, email: string, avatarUrl: string, isPro: boolean): User {
-    return {name, email, avatarUrl, isPro};
   }
 
   public async read(): Promise<void> {
