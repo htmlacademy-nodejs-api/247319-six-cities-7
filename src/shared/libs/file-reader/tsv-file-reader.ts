@@ -1,26 +1,16 @@
-import { readFileSync } from 'node:fs';
-import chalk from 'chalk';
+import EventEmitter from 'node:events';
+import { createReadStream } from 'node:fs';
+import 'tslib';
 import { FileReader } from './file-reader.interface.js';
-import { Place, City, TypePlace, Benefits, User } from '../../types/index.js';
+import { Place, TypePlace, Benefits, City } from '../../types/index.js';
 
-export class TSVFileReader implements FileReader {
-  private rawData = '';
+export class TSVFileReader extends EventEmitter implements FileReader {
+  private CHUNK_SIZE = 16384;
 
   constructor(
     private readonly filename: string
-  ) {}
-
-  private validateRawData(): void {
-    if (! this.rawData) {
-      throw new Error(chalk.red('File was not read'));
-    }
-  }
-
-  private parseRawDataToPlaces(): Place[] {
-    return this.rawData
-      .split('\n')
-      .filter((row) => row.trim().length > 0)
-      .map((line) => this.parseLineToPlace(line));
+  ) {
+    super();
   }
 
   private parseLineToPlace(line: string): Place {
@@ -42,7 +32,6 @@ export class TSVFileReader implements FileReader {
       name,
       email,
       avatarUrl,
-      password,
       isPro,
       latitude,
       longitude
@@ -54,7 +43,7 @@ export class TSVFileReader implements FileReader {
       title,
       description,
       postDate: new Date(postDate),
-      city: City[city as keyof typeof City],
+      city: city as unknown as City,
       previewImage,
       images: images.split(';'),
       isPremium: isPremium === 'true',
@@ -65,7 +54,12 @@ export class TSVFileReader implements FileReader {
       guests: Number(guests),
       price: Number(price),
       benefits: this.parseBenefits(benefits),
-      author: this.parseAuthor(name, email, avatarUrl, password, isProBoolean),
+      user: {
+        name: name,
+        email: email,
+        avatarUrl: avatarUrl,
+        isPro: isProBoolean
+      },
       latitude: Number.parseFloat(latitude),
       longitude: Number.parseFloat(longitude),
     };
@@ -81,23 +75,36 @@ export class TSVFileReader implements FileReader {
       if (Object.values(Benefits).includes(trimmedBenefit as Benefits)) {
         parsedBenefits.push(trimmedBenefit as Benefits);
       } else {
-        throw new Error(`Unknown benefit: ${trimmedBenefit}`);
+        console.error(`Unknown benefit: ${trimmedBenefit}`);
       }
     }
 
     return parsedBenefits;
   }
 
-  private parseAuthor(name: string, email: string, avatarUrl: string, password: string, isPro: boolean): User {
-    return {name, email, avatarUrl, password, isPro};
-  }
+  public async read(): Promise<void> {
+    const readStream = createReadStream(this.filename, {
+      highWaterMark: this.CHUNK_SIZE,
+      encoding: 'utf-8',
+    });
 
-  public read(): void {
-    this.rawData = readFileSync(this.filename, { encoding: 'utf-8' });
-  }
+    let remainingData = '';
+    let nextLinePosition = -1;
+    let importedRowCount = 0;
 
-  public toArray(): Place[] {
-    this.validateRawData();
-    return this.parseRawDataToPlaces();
+    for await (const chunk of readStream) {
+      remainingData += chunk.toString();
+
+      while ((nextLinePosition = remainingData.indexOf('\n')) >= 0) {
+        const completeRow = remainingData.slice(0, nextLinePosition + 1);
+        remainingData = remainingData.slice(++nextLinePosition);
+        importedRowCount++;
+
+        const parsedPlace = this.parseLineToPlace(completeRow);
+        this.emit('line', parsedPlace);
+      }
+    }
+
+    this.emit('end', importedRowCount);
   }
 }

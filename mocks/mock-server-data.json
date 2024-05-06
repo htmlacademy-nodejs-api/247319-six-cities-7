@@ -1,0 +1,123 @@
+{
+  "api": {
+    "titles": [
+      "The Joshua Tree House",
+      "Beautiful & luxurious apartment at great location",
+      "Canal View Prinsengracht",
+      "Loft Studio in the Central Area",
+      "The Pondhouse - A Magical Place"
+    ],
+    "descriptions": [
+      "Peaceful studio in the most wanted area in town. Quiet house Near of everything. Completely renovated.",
+      "Lovely neighbourhood, lot of trendy shops, restaurants and bars in a walking distance.",
+      "The house is very good, very happy, hygienic and simple living conditions around it are also very good.",
+      "A new spacious villa, one floor. All commodities, jacuzzi and beautiful scenery. Ideal for families or friends.",
+      "This is a place for dreamers to reset, reflect, and create. Designed with a 'slow' pace in mind, our hope is that you enjoy every part of your stay; from making local coffee by drip in the morning, choosing the perfect record to put on as the sun sets."
+    ],
+    "cities": [
+      {
+        "name": "Paris",
+        "location": {
+          "latitude": "48.85661",
+          "longitude":  "2.351499"
+        }
+      },
+      {
+        "name": "Amsterdam",
+        "location": {
+          "latitude": "52.370216",
+          "longitude": "4.895168"
+        }
+      },
+      {
+        "name": "Cologne",
+        "location": {
+          "latitude": "50.938361",
+          "longitude":  "6.959974"
+        }
+      },
+      {
+        "name": "Hamburg",
+        "location": {
+          "latitude": "53.550341",
+          "longitude": "10.000654"
+        }
+      },
+      {
+        "name": "Dusseldorf",
+        "location": {
+          "latitude": "51.225402",
+          "longitude": "6.776314"
+        }
+      },
+      {
+        "name": "Brussels",
+        "location": {
+          "latitude": "50.846557",
+          "longitude": "4.351697"
+        }
+      }
+    ],
+    "previewImages": [
+      "apartment-11.jpg",
+      "apartment-05.jpg",
+      "apartment-07.jpg",
+      "house-02.jpg",
+      "room-06.jpg"
+    ],
+    "images": [
+      "house-07.jpg",
+      "house-05.jpg",
+      "house-11.jpg",
+      "room-16.jpg",
+      "apartment-19.jpg"
+    ],
+    "typesPlace": [
+      "House",
+      "Apartment",
+      "Hotel",
+      "Room"
+    ],
+    "benefits": [
+      "Breakfast",
+      "Air Conditioning",
+      "Laptop friendly workspace",
+      "Baby seat",
+      "Washer",
+      "Towels",
+      "Fridge"
+    ],
+    "user": [
+      {
+        "name": "Roman",
+        "email": "Roman@gmail.com",
+        "avatarUrl": "http://roman.jpg"
+      },
+      {
+        "name": "Evgeniya",
+        "email": "Evgeniya@gmail.com",
+        "avatarUrl": "http://Evgeniya.jpg"
+      },
+      {
+        "name": "Arina",
+        "email": "Arina@gmail.com",
+        "avatarUrl": "http://Arina.jpg"
+      },
+      {
+        "name": "Olga",
+        "email": "Olga@gmail.com",
+        "avatarUrl": "http://Olga.jpg"
+      },
+      {
+        "name": "Alexander",
+        "email": "Alexander@gmail.com",
+        "avatarUrl": "http://Alexander.jpg"
+      },
+      {
+        "name": "Maksim",
+        "email": "Maksim@gmail.com",
+        "avatarUrl": "http://Maksim.jpg"
+      }
+    ]
+  }
+}

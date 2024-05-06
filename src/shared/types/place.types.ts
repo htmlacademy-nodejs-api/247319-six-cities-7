@@ -1,4 +1,4 @@
-import { City } from './city.enum.js';
+import { City } from './city.types.js';
 import { TypePlace } from './type-place.enum.js';
 import { Benefits } from './benefits.enum.js';
 import { User } from './user.types.js';
@@ -18,7 +18,7 @@ export type Place = {
   guests: number;
   price: number;
   benefits: Benefits[];
-  author: User;
+  user: User;
   latitude: number;
   longitude: number;
 }
