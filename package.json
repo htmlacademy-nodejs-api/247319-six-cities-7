@@ -15,7 +15,9 @@
     "compile": "tsc -p tsconfig.json",
     "clean": "rimraf dist",
     "ts": "tsc --noEmit && node --no-warnings=ExperimentalWarning --loader ts-node/esm",
-    "mock:server": "json-server ./mocks/mock-server-data.json --port 3123 --host localhost"
+    "mock:server": "json-server ./mocks/mock-server-data.json --port 3123 --host localhost",
+    "mongodb:start": "docker compose --file \"./docker-compose.yml\" --env-file \"./.env\" --project-name \"six-cities\" up -d",
+    "mongodb:stop": "docker compose --file \"./docker-compose.yml\" --project-name \"six-cities\" down"
   },
   "devDependencies": {
     "@types/convict": "6.1.6",

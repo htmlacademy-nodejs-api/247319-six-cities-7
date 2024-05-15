@@ -4,7 +4,6 @@ import { Logger } from '../shared/libs/logger/index.js';
 import { Component } from '../shared/types/index.js';
 import { getMongoURI } from '../shared/helpers/index.js';
 import { DatabaseClient } from '../shared/libs/database-client/index.js';
-// import { UserModel } from '../shared/modules/user/index.js';
 
 @injectable()
 export class RestApplication {
