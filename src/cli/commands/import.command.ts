@@ -2,23 +2,78 @@ import chalk from 'chalk';
 import { Command } from './command.interface.js';
 import { TSVFileReader } from '../../shared/libs/file-reader/index.js';
 import { Place } from '../../shared/types/place.types.js';
-import { getErrorMessage } from '../../shared/helpers/index.js';
+import { getErrorMessage, getMongoURI } from '../../shared/helpers/index.js';
+import { DefaultUserService, UserModel, UserService } from '../../shared/modules/user/index.js';
+import { DefaultPlaceService, PlaceModel, PlaceService } from '../../shared/modules/place/index.js';
+import { DatabaseClient, MongoDatabaseClient } from '../../shared/libs/database-client/index.js';
+import { Logger } from '../../shared/libs/logger/index.js';
+import { ConsoleLogger } from '../../shared/libs/logger/index.js';
+import { DEFAULT_DB_PORT, DEFAULT_USER_PASSWORD } from './command.constant.js';
 
 export class ImportCommand implements Command {
-  private onImportedPlace(place: Place): void {
-    console.log(place);
-  }
+  private userService: UserService;
+  private placeService: PlaceService;
+  private databaseClient: DatabaseClient;
+  private logger: Logger;
+  private salt: string;
 
-  private onCompleteImport(count: number) {
-    console.info(chalk.green(`${count} rows imported`));
+  constructor() {
+    this.onImportedPlace = this.onImportedPlace.bind(this);
+    this.onCompleteImport = this.onCompleteImport.bind(this);
+
+    this.logger = new ConsoleLogger();
+    this.placeService = new DefaultPlaceService(this.logger, PlaceModel);
+    this.userService = new DefaultUserService(this.logger, UserModel);
+    this.databaseClient = new MongoDatabaseClient(this.logger);
   }
 
   public getName(): string {
     return '--import';
   }
 
-  public async execute(...parameters: string[]): Promise<void> {
-    const [filename] = parameters;
+  private async onImportedPlace(place: Place, resolve: () => void) {
+    await this.savePlace(place);
+    resolve();
+  }
+
+  private async savePlace(place: Place) {
+    const user = await this.userService.findOrCreate({
+      ...place.user,
+      password: DEFAULT_USER_PASSWORD
+    }, this.salt);
+
+    await this.placeService.create({
+      title: place.title,
+      description: place.description,
+      postDate: place.postDate,
+      city: place.city,
+      previewImage: place.previewImage,
+      images: place.images,
+      isPremium: place.isPremium,
+      isFavorite: place.isFavorite,
+      rating: place.rating,
+      typePlace: place.typePlace,
+      bedrooms: place.bedrooms,
+      guests: place.guests,
+      price: place.price,
+      benefits: place.benefits,
+      user: user,
+      latitude: place.latitude,
+      longitude: place.longitude,
+    });
+  }
+
+  private onCompleteImport(count: number) {
+    console.info(chalk.green(`${count} rows imported`));
+    this.databaseClient.disconnect();
+  }
+
+  public async execute(filename: string, login: string, password: string, host: string, dbname: string, salt: string): Promise<void> {
+    const uri = getMongoURI(login, password, host, DEFAULT_DB_PORT, dbname);
+    this.salt = salt;
+
+    await this.databaseClient.connect(uri);
+
     const fileReader = new TSVFileReader(filename.trim());
 
     fileReader.on('line', this.onImportedPlace);

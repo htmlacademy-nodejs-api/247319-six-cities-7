@@ -101,7 +101,10 @@ export class TSVFileReader extends EventEmitter implements FileReader {
         importedRowCount++;
 
         const parsedPlace = this.parseLineToPlace(completeRow);
-        this.emit('line', parsedPlace);
+
+        await new Promise((resolve) => {
+          this.emit('line', parsedPlace, resolve);
+        });
       }
     }
 
