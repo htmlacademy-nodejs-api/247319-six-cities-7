@@ -1,5 +1,4 @@
 import { City, TypePlace, User } from '../../../types/index.js';
-
 export class CreatePlaceDto {
   public title: string;
   public description: string;

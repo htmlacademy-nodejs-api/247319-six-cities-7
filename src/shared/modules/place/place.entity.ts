@@ -1,6 +1,6 @@
 import { defaultClasses, prop, modelOptions, getModelForClass } from '@typegoose/typegoose';
 import { Benefits, City, Place, TypePlace } from '../../types/index.js';
-import { UserEntity, UserModel } from '../user/index.js';
+import { UserEntity } from '../user/index.js';
 
 // eslint-disable-next-line @typescript-eslint/no-unsafe-declaration-merging
 export interface PlaceEntity extends defaultClasses.Base {}
@@ -28,13 +28,7 @@ export class PlaceEntity extends defaultClasses.TimeStamps implements Place {
   @prop({required: true})
   public previewImage!: string;
 
-  @prop({
-    required: true,
-    validate: {
-      validator: (images: string[]) => images.length === 6,
-      message: 'The images array must contain exactly 6 pictures',
-    },
-  })
+  @prop({required: true})
   public images!: string[];
 
   @prop({required: true})
@@ -47,10 +41,6 @@ export class PlaceEntity extends defaultClasses.TimeStamps implements Place {
     required: true,
     min: 1,
     max: 5,
-    validate: {
-      validator: (rating: number) => /^\d+(\.\d)?$/.test(rating.toString()),
-      message: 'Rating must be a number between 1 and 5 with optional one decimal place.',
-    },
   })
   public rating!: number;
 
@@ -80,7 +70,7 @@ export class PlaceEntity extends defaultClasses.TimeStamps implements Place {
 
   @prop({
     required: true,
-    ref: UserModel
+    ref: UserEntity
   })
   public user!: UserEntity;
   //? как тут корректно задать ссылку на пользователя ?
