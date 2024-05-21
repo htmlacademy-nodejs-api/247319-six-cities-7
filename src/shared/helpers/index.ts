@@ -4,7 +4,8 @@ export {
   getRandomItem,
   generateRandomRating,
   getRandomBoolean,
-  getErrorMessage
+  getErrorMessage,
+  getRandomSixImages
 } from './common.js';
 
 export { getCurrentModuleDirectoryPath } from './file-system.js';

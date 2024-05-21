@@ -1,5 +1,5 @@
-import { defaultClasses, prop, modelOptions, getModelForClass } from '@typegoose/typegoose';
-import { Benefits, City, Place, TypePlace } from '../../types/index.js';
+import { defaultClasses, prop, modelOptions, getModelForClass, Ref } from '@typegoose/typegoose';
+import { Benefits, City, TypePlace } from '../../types/index.js';
 import { UserEntity } from '../user/index.js';
 
 // eslint-disable-next-line @typescript-eslint/no-unsafe-declaration-merging
@@ -12,7 +12,7 @@ export interface PlaceEntity extends defaultClasses.Base {}
   }
 })
 // eslint-disable-next-line @typescript-eslint/no-unsafe-declaration-merging
-export class PlaceEntity extends defaultClasses.TimeStamps implements Place {
+export class PlaceEntity extends defaultClasses.TimeStamps {
   @prop({required: true, minlength: 10, maxlength: 100, trim: true})
   public title!: string;
 
@@ -72,8 +72,7 @@ export class PlaceEntity extends defaultClasses.TimeStamps implements Place {
     required: true,
     ref: UserEntity
   })
-  public user!: UserEntity;
-  //? как тут корректно задать ссылку на пользователя ?
+  public userId!: Ref<UserEntity>;
 
   @prop({required: true})
   public latitude!: number;

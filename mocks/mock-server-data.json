@@ -70,7 +70,10 @@
       "house-05.jpg",
       "house-11.jpg",
       "room-16.jpg",
-      "apartment-19.jpg"
+      "apartment-19.jpg",
+      "apartment-1.jpg",
+      "apartment-9.jpg",
+      "apartment-29.jpg"
     ],
     "typesPlace": [
       "House",
@@ -114,9 +117,9 @@
         "avatarUrl": "http://Alexander.jpg"
       },
       {
-        "name": "Maksim",
-        "email": "Maksim@gmail.com",
-        "avatarUrl": "http://Maksim.jpg"
+        "name": "Marko Polo",
+        "email": "Marko_Polo@gmail.com",
+        "avatarUrl": "http://Marko_Polo.jpg"
       }
     ]
   }

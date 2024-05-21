@@ -57,7 +57,7 @@ export class ImportCommand implements Command {
       guests: place.guests,
       price: place.price,
       benefits: place.benefits,
-      user: user,
+      userId: user.id,
       latitude: place.latitude,
       longitude: place.longitude,
     });

@@ -1,4 +1,4 @@
-import { City, TypePlace, User } from '../../../types/index.js';
+import { City, TypePlace } from '../../../types/index.js';
 export class CreatePlaceDto {
   public title: string;
   public description: string;
@@ -14,7 +14,7 @@ export class CreatePlaceDto {
   public guests: number;
   public price: number;
   public benefits: string[];
-  public user: User;
+  public userId: string;
   public latitude: number;
   public longitude: number;
 }
