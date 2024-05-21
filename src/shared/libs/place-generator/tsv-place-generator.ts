@@ -1,4 +1,4 @@
-import { generateRandomRating, generateRandomValue, getRandomBoolean, getRandomItem, getRandomItems } from '../../helpers/common.js';
+import { generateRandomRating, generateRandomValue, getRandomBoolean, getRandomItem, getRandomItems, getRandomSixImages } from '../../helpers/common.js';
 import { Benefits, MockServerData, TypePlace } from '../../types/index.js';
 import { PlaceGenerator } from './place-generator.interface.js';
 import dayjs from 'dayjs';
@@ -23,7 +23,7 @@ export class TSVPlaceGenerator implements PlaceGenerator {
     const postDate = dayjs().subtract(generateRandomValue(FIRST_WEEK_DAY, LAST_WEEK_DAY), 'day').toISOString();
     const city = getRandomItem(this.mockData.cities);
     const previewImage = getRandomItem(this.mockData.previewImages);
-    const images = getRandomItems(this.mockData.images).join(';');
+    const images = getRandomSixImages(this.mockData.images).join(';');
     const isPremium = getRandomBoolean();
     const isFavorite = getRandomBoolean();
     const rating = generateRandomRating(MIN_RATING, MAX_RATING).toString();

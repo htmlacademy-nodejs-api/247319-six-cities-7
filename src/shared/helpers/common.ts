@@ -7,9 +7,22 @@ export function generateRandomRating(min:number, max: number, numAfterDigit = 1)
 }
 
 export function getRandomItems<T>(items: T[]):T[] {
+  if (items.length === 0) {
+    return [];
+  }
   const startPosition = generateRandomValue(0, items.length - 1);
-  const endPosition = startPosition + generateRandomValue(startPosition, items.length);
+  const endPosition = startPosition + generateRandomValue(1, items.length - startPosition);
   return items.slice(startPosition, endPosition);
+}
+
+export function getRandomSixImages<T>(images: T[]):T[] {
+  if (images.length < 6) {
+    throw new Error('Array length must be at least 6');
+  }
+
+  const startPosition = generateRandomValue(0, images.length - 6);
+  const endPosition = startPosition + 6;
+  return images.slice(startPosition, endPosition);
 }
 
 export function getRandomItem<T>(items: T[]):T {
