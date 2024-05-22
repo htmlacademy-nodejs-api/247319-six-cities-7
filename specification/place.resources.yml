@@ -13,6 +13,12 @@ components:
         type: string
         example: 899439jdjd36hkk383jjd73
       description: id объекта для аренды
+    CityId:
+      in: query
+      name: cityId
+      required: true
+      example: 9393jjmd37dl3l49lld
+      allowEmptyValue: false
   schemas:
     Place:
       type: object
@@ -141,3 +147,36 @@ components:
           example: 18
         user:
           $ref: 'user.resources.yml#/components/schemas/User'
+    PlacePremium:
+      type: object
+      properties:
+        price:
+          type: number
+          example: 2800
+        title:
+          type: string
+          example: Lux apartment
+        typePlace:
+          type: string
+          example: apartment
+        isFavorite:
+          type: boolean
+          example: false
+        postDate:
+          type: string
+          example: 2024-03-28T18:28:18.886Z
+        city:
+          type: string
+          example: Paris
+        previewImage:
+          type: string
+          example: https://image-apartment28.jpg
+        isPremium:
+          type: boolean
+          example: true
+        rating:
+          type: number
+          example: 2.5
+        commentsCount:
+          type: number
+          example: 18

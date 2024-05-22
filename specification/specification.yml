@@ -11,12 +11,16 @@ info:
 servers:
  - url: https://localhost:4000
 tags:
-  - name: PLACES
-    description: Действия с объектами аренды
   - name: USERS
     description: Действия с пользователями.
+  - name: PLACES
+    description: Действия с объектами аренды
   - name: REVIEWS
     description: Действия с отзывами.
+  - name: PREMIUM
+    description: Премиальные предложения для определенного города.
+  - name: FAVORITES
+    description: Избранные предложения.
 paths:
   /users/register:
     post:
@@ -161,7 +165,7 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: './place.resources.yml#/components/schemas/Place'
+                  $ref: './place.resources.yml#/components/schemas/PlacePremium'
         '404':
           description: Предложения не найдены
           content:
@@ -268,6 +272,89 @@ paths:
             application/json:
               schema:
                 $ref: './error.resources.yml#/components/schemas/RequestError'
+  /places/premium:
+    get:
+      tags:
+        - PREMIUM
+      summary: Список премиальных предложения для города
+      description: Ресурс для получения списка премиальных предложений для определенного города
+      parameters:
+        - $ref: './place.resources.yml#/components/parameters/CityId'
+      responses:
+        '200':
+          description: Массив объектов премиальных мест для города
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: './place.resources.yml#/components/schemas/PlacePremium'
+        '404':
+          description: Премиальные предложения не найдены
+          content:
+            application/json:
+              schema:
+                $ref: './error.resources.yml#/components/schemas/RequestError'
+  /places/favorites:
+    get:
+      tags:
+        - FAVORITES
+      summary: Список предложений, добавленных в избранное
+      description: Ресурс для получения списка избранных предложений доступен только авторизованным пользователям!
+      responses:
+        '200':
+          description: Массив объектов премиальных мест для города
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: './place.resources.yml#/components/schemas/PlacePremium'
+        '404':
+          description: Избраные предложения не найдены
+          content:
+            application/json:
+              schema:
+                $ref: './error.resources.yml#/components/schemas/RequestError'
+  /places/${placeId}/favorites:
+    patch:
+      tags:
+        - FAVORITES
+      summary: Добавление или удаление предложения в избранное
+      description: Ресурс для добавления или удаления предложения в избранное доступен только авторизованным пользователям!
+      parameters:
+        - $ref: './place.resources.yml#/components/parameters/PlaceIdPath'
+      requestBody:
+        description: Информация для добавления или удаления предложения в/из избранное
+        content:
+          application/json:
+            schema:
+              $ref: './place.resources.yml#/components/schemas/PlacePremium'
+      responses:
+        '200':
+          description: Флаг Избранное в предложение обновлен
+          content:
+            application/json:
+              schema:
+                $ref: './place.resources.yml#/components/schemas/PlacePremium'
+        '400':
+          description: Ошибка в данных
+          content:
+            application/json:
+              schema:
+                $ref: './error.resources.yml#/components/schemas/ValidationError'
+        '401':
+          description: Пользователь не авторизован
+          content:
+            application/json:
+              schema:
+                $ref: './error.resources.yml#/components/schemas/AuthError'
+        '404':
+          description: Преложение по аренде не найдено
+          content:
+            application/json:
+              schema:
+                $ref: './error.resources.yml#/components/schemas/RequestError'
   /reviews/${placeId}:
     get:
       tags:
@@ -347,3 +434,4 @@ paths:
             application/json:
               schema:
                 $ref: './error.resources.yml#/components/schemas/RequestError'
+
