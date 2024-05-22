@@ -1,0 +1,21 @@
+openapi: 3.1.0
+info:
+  title: Reviews resources
+  version: '1.0'
+paths: {}
+components:
+  schemas:
+    Review:
+      type: object
+      properties:
+        reviewText:
+          type: string
+          example: very nice place, amazing view to the wall another house. nasty housekeeper
+        postDate:
+          type: string
+          example: 2024-03-28T18:28:18.886Z
+        rating:
+          type: number
+          example: 1.2
+        author:
+          $ref: 'user.resources.yml#/components/schemas/User'

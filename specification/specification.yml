@@ -1,0 +1,349 @@
+openapi: 3.1.0
+info:
+  title: API сервер для проекта "Six-Cities".
+  description: |-
+    * Список ресурсов и маршрутов сервера "Six-Cities".
+    * URL: https://localhost:4000
+  license:
+    name: MIT
+    url: https://opensource.org/licenses/MIT
+  version: 2.0.0
+servers:
+ - url: https://localhost:4000
+tags:
+  - name: PLACES
+    description: Действия с объектами аренды
+  - name: USERS
+    description: Действия с пользователями.
+  - name: REVIEWS
+    description: Действия с отзывами.
+paths:
+  /users/register:
+    post:
+      tags:
+        - USERS
+      summary: Создание нового пользователя
+      description: |-
+        Ресурс для создания нового пользователя.
+
+        Для создания нового пользователя клиент отправляет запрос и передаёт данные - Имя, Email, Аватар, Пароль, Тип пользователя.
+
+        Создавать новых пользователей могут только анонимные клиенты.
+
+        Email создаваемого пользователя уникален. В системе не может быть двух пользователей с одинаковым email.
+
+        Данные, полученные от клиента, проходят валидацию. Если проверка не пройдена, сервер возвращает ошибку и корректный код состояния.
+
+        В случае успешного создания пользователя сервис возвращает информацию о созданном пользователе (объект пользователя).
+
+        Возвращаемая информация не содержит конфиденциальных данных (например, пароль).
+
+        Пароль пользователя не хранится в базе данных в открытом виде. Вместо этого хранится хеш пароля.
+      requestBody:
+        description: Информация для создания нового пользователя.
+        content:
+          application/json:
+            schema:
+              $ref: './user.resources.yml#/components/schemas/CreateUser'
+        required: true
+      responses:
+        '201':
+          description: Пользователь зарегистрирован. Объект пользователя.
+          content:
+            application/json:
+              schema:
+                $ref: './user.resources.yml#/components/schemas/User'
+        '400':
+          description: Переданы некорректные данные. Попробуйте снова
+          content:
+            application/json:
+              schema:
+                $ref: './error.resources.yml#/components/schemas/ValidationError'
+  /users/login:
+    post:
+      tags:
+        - USERS
+      summary: Авторизация пользователя
+      description: |-
+        Ресурс для аутентификации и авторизации пользователя.
+
+        Для входа в закрытую часть приложения клиент передаёт логин (email) и пароль пользователя.
+
+        Если логин или пароль неверный или пользователь не существует, сервер возвращает ошибку и соответствующий код состояния.
+
+        В случае успешной проверки логина и пароля сервис возвращает клиенту токен.
+
+        Клиент использует этот токен для отправки любых запросов. Токен передаётся в заголовках.
+      requestBody:
+        description: Информация для входа в закрытую часть приложения
+        content:
+          application/json:
+            schema:
+              $ref: './user.resources.yml#/components/schemas/UserLoginRequest'
+        required: true
+      responses:
+        '200':
+          description: Логин успешен. Объект пользователя для логина
+          content:
+            application/json:
+              schema:
+                $ref: './user.resources.yml#/components/schemas/UserLogin'
+        '400':
+          description: Ошибка в запросе
+          content:
+            application/json:
+              schema:
+                $ref: './error.resources.yml#/components/schemas/ValidationError'
+    get:
+      tags:
+        - USERS
+      summary: Проверка состояния пользователя
+      description: |-
+        Ресурс для проверки состояния клиента — авторизован или нет.
+
+        Проверка состояния клиента производится на основании сессионного токена.
+
+        Если клиент авторизован, сервис возвращает соответствующий код состояния и информацию о пользователе (Имя, Email, Аватар, Пароль, Тип пользователя).
+
+        Информация о пользователе не должна содержать конфиденциальные данные (например, пароль).
+      requestBody:
+        description: Возвращает информацию о статусе авторизации пользователя.
+        content:
+          application/json:
+            schema:
+              $ref: './user.resources.yml#/components/schemas/UserLogin'
+      responses:
+        "200":
+          description: Статус авторизации пользователя
+          content:
+            application/json:
+              schema:
+                $ref: './user.resources.yml#/components/schemas/UserLogin'
+        "401":
+          description: Статус авторизации пользователя
+          content:
+            application/json:
+              schema:
+                $ref: './error.resources.yml#/components/schemas/AuthError'
+  /users/logout:
+    delete:
+      tags:
+        - USERS
+      summary: Завершить сеанс пользователя
+      description: Завершает сеанс. Выход из закрытой части приложения
+      responses:
+        '204':
+          description: Сеанс завершен
+  /places:
+    get:
+      tags:
+        - PLACES
+      summary: Получить список предложений для аренды
+      description: |-
+        Ресурс для получения списка предложений для аренды.
+
+        По умолчанию сервер возвращает не более 60 предложений для аренды
+
+        Клиент может запросить больше предложений, указав нужное количество в параметре запроса.
+
+        Сервис всегда возвращает отсортированный список предложений по дате публикации (по убыванию).
+
+        Предложение не содержит список отзывов. Только информацию об их количестве. Для запроса отзывов к определённому предложению сервис предоставляет отдельный ресурс.
+
+        Список предложений по аренде могут запрашивать анонимные и авторизованные клиенты.
+
+        Список возвращаемых полей предложения: стоимость аренды, название, тип жилья, флаг, позволяющий определить принадлежность к избранным предложениям, дата публикации, город, превью изображения, флаг «Премиум», рейтинг, количество отзывов.
+      responses:
+        '200':
+          description: Массив объектов предложения по аренде.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: './place.resources.yml#/components/schemas/Place'
+        '404':
+          description: Предложения не найдены
+          content:
+            application/json:
+              schema:
+                $ref: './error.resources.yml#/components/schemas/RequestError'
+    post:
+      tags:
+        - PLACES
+      summary: Создание предложения об аренде
+      description: Ресурс для создания нового предложения об аренде
+      requestBody:
+        description: Данные для создания нового предложения
+        content:
+          application/json:
+            schema:
+              $ref: './place.resources.yml#/components/schemas/CreatePlace'
+      responses:
+        '201':
+          description: Предложение создано. Объект предложения по аренде
+          content:
+            application/json:
+              schema:
+                $ref: './place.resources.yml#/components/schemas/Place'
+        '400':
+          description: Ошибка в запросе
+          content:
+            application/json:
+              schema:
+                $ref: './error.resources.yml#/components/schemas/ValidationError'
+        '401':
+          description: Пользователь не авторизован
+          content:
+            application/json:
+              schema:
+                $ref: './error.resources.yml#/components/schemas/AuthError'
+  /places/${placeId}:
+    get:
+      tags:
+        - PLACES
+      summary: Получить детальную информацию о предложении для аренды
+      description: |-
+        Сервис предоставляет ресурс для получения детальной информации по одному предложению.
+
+        Возвращает предложение со всеми полями с идентификатором placesId.
+
+        Детальная информация по предложению включает сведения о количестве отзывов. Сами комментарии не включены.
+
+        Детальную информацию по предложению могут запрашивать авторизованные и анонимные клиенты.
+      parameters:
+        - $ref: './place.resources.yml#/components/parameters/PlaceIdPath'
+      responses:
+        '200':
+          description: Объект предложения по аренде.
+          content:
+            application/json:
+              schema:
+                $ref: './place.resources.yml#/components/schemas/Place'
+        '404':
+          description: Предложение не найдено
+          content:
+            application/json:
+              schema:
+                $ref: './error.resources.yml#/components/schemas/RequestError'
+    patch:
+      tags:
+        - PLACES
+      summary: Редактирование предложения об аренде
+      description: Ресурс для редактирования предложения об аренде
+      parameters:
+        - $ref: './place.resources.yml#/components/parameters/PlaceIdPath'
+      requestBody:
+        description: Данные для редактирования предложения
+        content:
+          application/json:
+            schema:
+              $ref: './place.resources.yml#/components/schemas/CreatePlace'
+      responses:
+        '201':
+          description: Предложение изменено. Новый объект предложения по аренде
+          content:
+            application/json:
+              schema:
+                $ref: './place.resources.yml#/components/schemas/Place'
+        '400':
+          description: Ошибка в запросе
+          content:
+            application/json:
+              schema:
+                $ref: './error.resources.yml#/components/schemas/ValidationError'
+    delete:
+      tags:
+        - PLACES
+      summary: Удаление предложения об аренде
+      description: Ресурс для удаления предложения об аренде
+      parameters:
+        - $ref: './place.resources.yml#/components/parameters/PlaceIdPath'
+      responses:
+        '204':
+          description: Предложение удалено.
+        '404':
+          description: Предложение не найдено
+          content:
+            application/json:
+              schema:
+                $ref: './error.resources.yml#/components/schemas/RequestError'
+  /reviews/${placeId}:
+    get:
+      tags:
+        - REVIEWS
+      summary: Получить список отзывов к предложению
+      description: |-
+        Сервис предоставляет ресурс для получения списка отзывов для определённого предложения.
+
+        Сервис всегда возвращает список из 50 (или меньше) последних отзывов.
+
+        Отзывы отсортированы по дате публикации (по убыванию). Сначала новые, потом старые.
+
+        Отзывы в списке представлен: текст, дата публикации, рейтинг, автор отзыва
+      parameters:
+        - $ref: './place.resources.yml#/components/parameters/PlaceIdPath'
+      responses:
+        '200':
+          description: Массив отзывов.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: './reviews.resources.yml#/components/schemas/Review'
+        '404':
+          description: Отзывы не найдены
+          content:
+            application/json:
+              schema:
+                  $ref: './error.resources.yml#/components/schemas/RequestError'
+    post:
+      tags:
+        - REVIEWS
+      summary: Создать отзыв к предложению
+      description: |-
+        Сервис предоставляет ресурс для добавления отзывов к определённому предложению по аренде.
+
+        Добавлять комментарии могут только авторизованные клиенты.
+
+        Для добавления нового отзыва к предложению клиент передаёт набор информации: текст, дата публикации, рейтинг, автор отзыва
+
+        Перед добавлением отзыва сервис валидирует данные. В случае ошибки валидации сервис возвращает ошибку и корректный код состояния.
+
+        В случае успешного добавления отзыва сервис возвращает информацию о созданном комментарии (объект отзыва).
+
+        Удаление и редактирование отзывов не предусмотрено.
+      parameters:
+        - $ref: './place.resources.yml#/components/parameters/PlaceIdPath'
+      requestBody:
+        description: Данные для создания нового отзыва
+        content:
+          application/json:
+            schema:
+              $ref: './reviews.resources.yml#/components/schemas/Review'
+      responses:
+        '201':
+          description: Объект нового отзыва.
+          content:
+            application/json:
+              schema:
+                $ref: './reviews.resources.yml#/components/schemas/Review'
+        '400':
+          description: Ошибка в запросе
+          content:
+            application/json:
+              schema:
+                $ref: './error.resources.yml#/components/schemas/ValidationError'
+        '401':
+          description: Пользователь не авторизован
+          content:
+            application/json:
+              schema:
+                $ref: './error.resources.yml#/components/schemas/AuthError'
+        '404':
+          description: Отзывы не найдены
+          content:
+            application/json:
+              schema:
+                $ref: './error.resources.yml#/components/schemas/RequestError'

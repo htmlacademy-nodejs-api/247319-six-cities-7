@@ -1,0 +1,143 @@
+openapi: 3.1.0
+info:
+  title: Place resources
+  version: '1.0'
+paths: {}
+components:
+  parameters:
+    PlaceIdPath:
+      in: path
+      name: placeId
+      required: true
+      schema:
+        type: string
+        example: 899439jdjd36hkk383jjd73
+      description: id объекта для аренды
+  schemas:
+    Place:
+      type: object
+      properties:
+        id:
+          type: string
+          example: 774739jfjfj3h6gdjo933
+        title:
+          type: string
+          example: Lux apartment
+        description:
+          type: string
+          example: Lorem ipsum dolore bla bla bla
+        postDate:
+          type: string
+          example: 2024-03-28T18:28:18.886Z
+        city:
+          type: string
+          example: Paris
+        previewImage:
+          type: string
+          example: https://image-apartment28.jpg
+        images:
+          type: string[]
+          example: [
+            http://image-apartment28.jpg,
+            http://image-apartment22.jpg,
+            http://image-apartment23.jpg,
+            http://image-apartment24.jpg,
+            http://image-apartment25.jpg,
+            http://image-apartment26.jpg,
+          ]
+        isPremium:
+          type: boolean
+          example: true
+        isFavorite:
+          type: boolean
+          example: false
+        rating:
+          type: number
+          example: 2.5
+        typePlace:
+          type: string
+          example: apartment
+        bedrooms:
+          type: number
+          example: 3
+        guests:
+          type: number
+          example: 4
+        price:
+          type: number
+          example: 2800
+        benefits:
+          type: string[]
+          example: [Towels, Baby seat]
+        latitude:
+          type: number
+          example: 53.550341
+        longitude:
+          type: number
+          example: 10.000654
+        commentsCount:
+          type: number
+          example: 18
+    CreatePlace:
+      type: object
+      properties:
+        title:
+          type: string
+          example: Lux apartment
+        description:
+          type: string
+          example: Lorem ipsum dolore bla bla bla
+        postDate:
+          type: string
+          example: 2024-03-28T18:28:18.886Z
+        city:
+          type: string
+          example: Paris
+        previewImage:
+          type: string
+          example: https://image-apartment28.jpg
+        images:
+          type: string[]
+          example: [
+            http://image-apartment28.jpg,
+            http://image-apartment22.jpg,
+            http://image-apartment23.jpg,
+            http://image-apartment24.jpg,
+            http://image-apartment25.jpg,
+            http://image-apartment26.jpg,
+          ]
+        isPremium:
+          type: boolean
+          example: true
+        isFavorite:
+          type: boolean
+          example: false
+        rating:
+          type: number
+          example: 2.5
+        typePlace:
+          type: string
+          example: apartment
+        bedrooms:
+          type: number
+          example: 3
+        guests:
+          type: number
+          example: 4
+        price:
+          type: number
+          example: 2800
+        benefits:
+          type: string[]
+          example: [Towels, Baby seat]
+        latitude:
+          type: number
+          example: 53.550341
+        longitude:
+          type: number
+          example: 10.000654
+        commentsCount:
+          type: number
+          example: 18
+        user:
+          $ref: 'user.resources.yml#/components/schemas/User'

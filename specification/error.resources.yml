@@ -1,0 +1,52 @@
+openapi: 3.1.0
+info:
+  title: Error resources
+  version: '1.0'
+paths: {}
+components:
+  schemas:
+    ValidationError:
+      type: object
+      properties:
+        errorType:
+          type: string
+          example: VALIDATION ERROR
+        message:
+          type: string
+          example: 'Validation error: /users/login'
+        details:
+          type: array
+          required: false
+          items:
+            type: object
+            properties:
+              property:
+                type: string
+                example: password
+              value:
+                type: string
+                example: p
+              messages:
+                type: array
+                items:
+                  type: string
+                  example: password must be longer than or equal to 3 characters
+    RequestError:
+      type: object
+      properties:
+        errorType:
+          type: string
+          example: REQUEST ERROR
+        message:
+          type: string
+          example: 'BAD REQUEST'
+    AuthError:
+      type: object
+      properties:
+        errorType:
+          type: string
+          example: AUTH ERROR
+        message:
+          type: string
+          example: 'USER IS NOT LOGGED IN'
+
