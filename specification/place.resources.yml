@@ -89,7 +89,7 @@ components:
         longitude:
           type: number
           example: 10.000654
-        commentsCount:
+        reviewsCount:
           type: number
           example: 18
     CreatePlace:
@@ -150,7 +150,7 @@ components:
         longitude:
           type: number
           example: 10.000654
-        commentsCount:
+        reviewsCount:
           type: number
           example: 18
         user:
@@ -185,6 +185,6 @@ components:
         rating:
           type: number
           example: 2.5
-        commentsCount:
+        reviewsCount:
           type: number
           example: 18
