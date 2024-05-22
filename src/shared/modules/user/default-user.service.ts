@@ -60,10 +60,9 @@ export class DefaultUserService implements UserService {
   // public async logout(userId: string):Promise<void> {
   //   this.logger.info(`User logged out: ${userId}`);
   // }
-
-  public async checkUserState(userId: string): Promise<boolean> {
-    const user = await this.findById(userId);
-    return !!user;
-  }
-
+  //? как реализовать чек состояния?
+  // public async checkUserState(userId: string): Promise<boolean> {
+  //   const user = await this.findById(userId);
+  //   return !!user;
+  // }
 }

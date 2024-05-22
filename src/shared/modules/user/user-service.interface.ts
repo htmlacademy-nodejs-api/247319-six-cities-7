@@ -9,5 +9,5 @@ export interface UserService {
   findOrCreate(dto: CreateUserDto, salt: string): Promise<DocumentType<UserEntity>>;
   // login()
   // logout();
-  checkUserState(userId: string): Promise<boolean>;
+  // checkUserState(userId: string): Promise<boolean>;
 }
