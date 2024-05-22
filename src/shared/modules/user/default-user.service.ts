@@ -18,13 +18,16 @@ export class DefaultUserService implements UserService {
     user.setPassword(dto.password, salt);
 
     const result = await this.userModel.create(user);
-    this.logger.info(`New user created: ${user.email}`);
-
+    if (result) {
+      this.logger.info(`New user created: ${user.email}`);
+    } else {
+      this.logger.warn('New user has not been created');
+    }
     return result;
   }
 
   public async findByEmail(email: string): Promise<DocumentType<UserEntity> | null> {
-    return this.userModel.findOne({email});
+    return this.userModel.findOne({email}).exec();
   }
 
   public async findById(userId: string): Promise<DocumentType<UserEntity> | null> {
@@ -39,6 +42,28 @@ export class DefaultUserService implements UserService {
     }
 
     return this.create(dto, salt);
+  }
+  //? как реализовать логин?
+  // public async login(email: string, password: string): Promise<DocumentType<UserEntity> | null> {
+  //   const user = await this.findByEmail(email);
+
+  //   if (user && user.verifyPassword(password)) {
+  //     this.logger.info(`User authenticated: ${email}`);
+  //     return user;
+  //   }
+
+  //   this.logger.warn(`Authentication failed for user: ${email}`);
+  //   return null;
+  // }
+
+  //? как реализовать логаут?
+  // public async logout(userId: string):Promise<void> {
+  //   this.logger.info(`User logged out: ${userId}`);
+  // }
+
+  public async checkUserState(userId: string): Promise<boolean> {
+    const user = await this.findById(userId);
+    return !!user;
   }
 
 }

@@ -82,7 +82,7 @@ export class PlaceEntity extends defaultClasses.TimeStamps {
 
   //? Должны рассчитываться автоматически - что это значит?
   @prop({})
-  public commentsCount: number;
+  public reviewsCount: number;
 }
 
 export const PlaceModel = getModelForClass(PlaceEntity);
