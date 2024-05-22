@@ -316,7 +316,7 @@ paths:
             application/json:
               schema:
                 $ref: './error.resources.yml#/components/schemas/RequestError'
-  /places/${placeId}/favorites:
+  /places/${placeId}/favorites/${status}:
     patch:
       tags:
         - FAVORITES
@@ -324,6 +324,7 @@ paths:
       description: Ресурс для добавления или удаления предложения в избранное доступен только авторизованным пользователям!
       parameters:
         - $ref: './place.resources.yml#/components/parameters/PlaceIdPath'
+        - $ref: './place.resources.yml#/components/parameters/Status'
       requestBody:
         description: Информация для добавления или удаления предложения в/из избранное
         content:
@@ -332,13 +333,19 @@ paths:
               $ref: './place.resources.yml#/components/schemas/PlacePremium'
       responses:
         '200':
-          description: Флаг Избранное в предложение обновлен
+          description: Флаг Избранное false - предложение удалено из избранного
+          content:
+            application/json:
+              schema:
+                $ref: './place.resources.yml#/components/schemas/PlacePremium'
+        '201':
+          description: Флаг Избранное true - предложение добавлено в избранное
           content:
             application/json:
               schema:
                 $ref: './place.resources.yml#/components/schemas/PlacePremium'
         '400':
-          description: Ошибка в данных
+          description: Ошибка тела запроса
           content:
             application/json:
               schema:
@@ -351,6 +358,12 @@ paths:
                 $ref: './error.resources.yml#/components/schemas/AuthError'
         '404':
           description: Преложение по аренде не найдено
+          content:
+            application/json:
+              schema:
+                $ref: './error.resources.yml#/components/schemas/RequestError'
+        '409':
+          description: Преложение уже добавлено в избранное
           content:
             application/json:
               schema:

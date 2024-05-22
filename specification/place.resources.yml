@@ -19,6 +19,14 @@ components:
       required: true
       example: 9393jjmd37dl3l49lld
       allowEmptyValue: false
+    Status:
+      in: path
+      name: status
+      required: true
+      schema:
+        type: number
+        example: 1
+      description: код статуса для добавления/удаления из избранного. 1 добавляет в избранное, а 0 удаляет
   schemas:
     Place:
       type: object
