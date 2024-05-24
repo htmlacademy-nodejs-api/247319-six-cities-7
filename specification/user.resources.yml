@@ -1,0 +1,86 @@
+openapi: 3.1.0
+info:
+  title: User resources
+  version: '1.0'
+paths: {}
+components:
+  schemas:
+    CreateUserRequest:
+      type: object
+      properties:
+        name:
+          type: string
+          example: Roman
+          required: true
+        email:
+          type: string
+          example: Roman@yandex.ru
+          required: true
+        avatarUrl:
+          type: string
+          example: https://roman.jpg
+          required: false
+        password:
+          type: string
+          example: 123456
+          required: true
+        isPro:
+          type: boolean
+          example: true
+          required: true
+    User:
+      type: object
+      properties:
+        id:
+          type: string
+          example: 6363cke37dj37j39eeq
+        name:
+          type: string
+          example: Roman
+          required: false
+        email:
+          type: string
+          example: Roman@yandex.ru
+          required: true
+        avatarUrl:
+          type: string
+          example: https://roman.jpg
+          required: false
+        isPro:
+          type: boolean
+          example: true
+          required: true
+    UserLoginRequest:
+      type: object
+      properties:
+        email:
+          type: string
+          example: Roman@yandex.ru
+          required: true
+        password:
+          type: string
+          example: 123456
+          required: true
+    UserLogin:
+      type: object
+      properties:
+        name:
+          type: string
+          example: Roman
+          required: true
+        email:
+          type: string
+          example: Roman@yandex.ru
+          required: true
+        avatarUrl:
+          type: string
+          example: https://roman.jpg
+          required: false
+        isPro:
+          type: boolean
+          example: true
+          required: true
+        token:
+          type: string
+          example: T2xpdmVyLmNvbm5lckBnbWFpbC5
+
