@@ -11,4 +11,5 @@ export {
   MAX_GUESTS,
   MIN_PRICE,
   MAX_PRICE,
+  MAX_PLACE_COUNT
 } from './place-const.js';

@@ -9,6 +9,4 @@ export interface PlaceService {
   delete(placeId: string): Promise<DocumentType<PlaceEntity> | null>;
   findAll(): Promise<DocumentType<PlaceEntity>[] | null>;
   findPremiumByCity(city: typeof CITIES[number]): Promise<DocumentType<PlaceEntity>[] | null>;
-  findFavoritesByUser(userId: string): Promise<DocumentType<PlaceEntity>[] | null>;
-  toggleFavorite(placeId: string): Promise<DocumentType<PlaceEntity> | null>;
 }

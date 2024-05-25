@@ -90,7 +90,6 @@ export class PlaceEntity extends defaultClasses.TimeStamps {
   @prop({required: true})
   public longitude!: number;
 
-  //? Должны рассчитываться автоматически - что это значит?
   @prop({})
   public reviewsCount: number;
 }
