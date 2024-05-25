@@ -17,4 +17,10 @@ export class DefaultReviewService implements ReviewService {
   public async findByPlaceId(placeId: string): Promise<types.DocumentType<ReviewEntity>[]> {
     return this.reviewModel.find({placeId}).populate('userId');
   }
+
+  public async deleteByPlaceId(placeId: string): Promise<number> {
+    const result = await this.reviewModel.deleteMany({placeId}).exec();
+
+    return result.deletedCount;
+  }
 }
