@@ -4,6 +4,8 @@ import { BaseController, HttpMethod } from '../../libs/rest/index.js';
 import { Component } from '../../types/index.js';
 import { Logger } from '../../libs/logger/index.js';
 import { UserService } from './user-service.interface.js';
+import { fillDTO } from '../../helpers/index.js';
+import { UserRdo } from './index.js';
 
 @injectable()
 export class UserController extends BaseController {
@@ -21,7 +23,8 @@ export class UserController extends BaseController {
 
   public async index(_req: Request, res: Response): Promise<void> {
     const users = await this.userService.find();
-    this.ok(res, users);
+    const responseData = fillDTO(UserRdo, users);
+    this.ok(res, responseData);
   }
 
   public create(_req: Request, _res: Response): void {

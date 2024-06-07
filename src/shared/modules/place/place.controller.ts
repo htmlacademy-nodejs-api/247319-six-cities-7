@@ -4,6 +4,8 @@ import { BaseController, HttpMethod } from '../../libs/rest/index.js';
 import { Component } from '../../types/component.enum.js';
 import { Logger } from '../../libs/logger/index.js';
 import { PlaceService } from './place-service.interface.js';
+import { fillDTO } from '../../helpers/index.js';
+import { PlaceRdo } from './index.js';
 
 @injectable()
 export class PlaceController extends BaseController {
@@ -21,7 +23,8 @@ export class PlaceController extends BaseController {
 
   public async index(_req: Request, res: Response): Promise<void> {
     const places = await this.placeService.findAll();
-    this.ok(res, places);
+    const responseData = fillDTO(PlaceRdo, places);
+    this.ok(res, responseData);
   }
 
   public create(_req: Request, _res: Response): void {
