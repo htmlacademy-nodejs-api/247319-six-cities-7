@@ -9,4 +9,5 @@ export const Component = {
   PlaceService: Symbol.for('PlaceService'),
   ReviewModel: Symbol.for('ReviewModel'),
   ReviewService: Symbol.for('ReviewService'),
+  UserController: Symbol.for('UserController'),
 } as const;

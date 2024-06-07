@@ -8,6 +8,7 @@ export interface UserService {
   findById(userId: string): Promise<DocumentType<UserEntity> | null>;
   findOrCreate(dto: CreateUserDto, salt: string): Promise<DocumentType<UserEntity>>;
   updateById(userId: string, dto: UpdateUserDto): Promise<DocumentType<UserEntity> | null>;
+  find(): Promise<DocumentType<UserEntity>[]>;
   // login()
   // logout();
   // checkUserState(userId: string): Promise<boolean>;
