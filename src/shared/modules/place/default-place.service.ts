@@ -77,6 +77,10 @@ export class DefaultPlaceService implements PlaceService {
     return this.placeModel.findById(placeId).populate(['userId']).exec();
   }
 
+  public async findByCity(city: typeof CITIES[number]): Promise<DocumentType<PlaceEntity>[] | null> {
+    return this.placeModel.find({city}).populate(['userId']).exec();
+  }
+
   public async findPremiumByCity(city: typeof CITIES[number]): Promise<DocumentType<PlaceEntity>[] | null> {
     return this.placeModel.find({ city, isPremium: true }).populate(['userId']).exec();
   }

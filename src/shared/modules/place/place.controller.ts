@@ -5,7 +5,8 @@ import { Component } from '../../types/component.enum.js';
 import { Logger } from '../../libs/logger/index.js';
 import { PlaceService } from './place-service.interface.js';
 import { fillDTO } from '../../helpers/index.js';
-import { PlaceRdo } from './index.js';
+import { CreatePlaceDto, PlaceRdo } from './index.js';
+// import { StatusCodes } from 'http-status-codes';
 
 @injectable()
 export class PlaceController extends BaseController {
@@ -27,7 +28,24 @@ export class PlaceController extends BaseController {
     this.ok(res, responseData);
   }
 
-  public create(_req: Request, _res: Response): void {
+  public async create(
+    {body}: Request<Record<string, unknown>, Record<string, unknown>, CreatePlaceDto>,
+    res: Response
+  ): Promise<void> {
 
+    // const existPlace = await this.placeService.findById(body.);
+
+    // if (existPlace) {
+    //   const existPlaceError = new Error(`Place with this id: ${body.id} exist`);
+    //   this.send(res,
+    //     StatusCodes.UNPROCESSABLE_ENTITY,
+    //     {error: existPlaceError.message}
+    //   );
+
+    //   return this.logger.error(existPlaceError.message, existPlaceError);
+    // }
+
+    const result = await this.placeService.create(body);
+    this.created(res, fillDTO(PlaceRdo, result));
   }
 }

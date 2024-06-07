@@ -43,12 +43,20 @@ export class RestApplication {
     this.server.use('/places', this.placeController.router);
   }
 
+  private async _initMiddleware() {
+    this.server.use(express.json());
+  }
+
   public async init() {
     this.logger.info('Application initialization');
 
     this.logger.info('Init database...');
     await this.initDb();
     this.logger.info('Init database completed');
+
+    this.logger.info('Init middleware');
+    await this._initMiddleware();
+    this.logger.info('Init middleware completed');
 
     this.logger.info('Init controllers');
     await this._initControllers();
