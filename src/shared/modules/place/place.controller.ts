@@ -33,17 +33,14 @@ export class PlaceController extends BaseController {
     res: Response
   ): Promise<void> {
 
-    // const existPlace = await this.placeService.findById(body.);
+    // const existPlace = await this.placeService.findById(body.id);
 
     // if (existPlace) {
-    //   const existPlaceError = new Error(`Place with this id: ${body.id} exist`);
-    //   this.send(res,
-    //     StatusCodes.UNPROCESSABLE_ENTITY,
-    //     {error: existPlaceError.message}
+    //  throw new HttpError(
+    //    StatusCodes.CONFLICT,
+    //    `User with email: ${body.id} exist`,
+    //    'UserController'
     //   );
-
-    //   return this.logger.error(existPlaceError.message, existPlaceError);
-    // }
 
     const result = await this.placeService.create(body);
     this.created(res, fillDTO(PlaceRdo, result));
