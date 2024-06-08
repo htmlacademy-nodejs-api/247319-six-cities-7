@@ -12,6 +12,7 @@ Content-Type: application/json
 {
   "title": "The Joshua Tree House",
   "description": "LovBLABLABLABLAourhood, lot of trendy shops, restaurants and bars in a walking distance.;The house is very good, very happy, hygienic and simple living conditions around it are also very good.",
+  "postDate":"2024-05-14T21:23:48.979Z",
   "city": "Cologne",
   "previewImage": "house-02.jpg",
   "images": [
@@ -32,8 +33,29 @@ Content-Type: application/json
   "benefits": [
     "Washer"
   ],
+  "userId": "664d1102a83e76469bdbe1a2",
   "latitude": 50.938361,
   "longitude": 6.959974
 }
+
+###
+
+## Get place by placeId
+GET http://localhost:4000/places/664d1102a83e76469bdbe1a9 HTTP/1.1
+
+###
+
+## Patch place by placeId
+PATCH http://localhost:4000/places/664d1102a83e76469bdbe1a9 HTTP/1.1
+
+###
+
+## Delete place by placeId
+DELETE http://localhost:4000/places/664d1102a83e76469bdbe1a9 HTTP/1.1
+
+###
+
+## Get premium places by City
+GET http://localhost:4000/places/premium/Cologne HTTP/1.1
 
 ###
