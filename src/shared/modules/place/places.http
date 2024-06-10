@@ -24,8 +24,6 @@ Content-Type: application/json
     "apartment-9.jpg"
   ],
   "isPremium": false,
-  "isFavorite": false,
-  "rating": 1.6,
   "typePlace": "Apartment",
   "bedrooms": 7,
   "guests": 4,
@@ -47,7 +45,12 @@ GET http://localhost:4000/places/664d1102a83e76469bdbe1a9 HTTP/1.1
 
 ## Patch place by placeId
 PATCH http://localhost:4000/places/664d1102a83e76469bdbe1a9 HTTP/1.1
+Content-Type: application/json
 
+{
+  "bedrooms": 4,
+  "guests": 2
+}
 ###
 
 ## Delete place by placeId

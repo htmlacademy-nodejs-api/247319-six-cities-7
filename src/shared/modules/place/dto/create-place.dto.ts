@@ -7,8 +7,6 @@ export class CreatePlaceDto {
   public previewImage: string;
   public images: string[];
   public isPremium: boolean;
-  public isFavorite: boolean;
-  public rating: number;
   public typePlace: TypePlace;
   public bedrooms: number;
   public guests: number;

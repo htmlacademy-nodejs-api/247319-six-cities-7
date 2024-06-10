@@ -1,7 +1,7 @@
 import { Expose } from 'class-transformer';
 import { City, TypePlace } from '../../../types/index.js';
 
-export class PremiumPlaceRdo {
+export class PlacePremiumRdo {
   @Expose()
   public price: number;
 

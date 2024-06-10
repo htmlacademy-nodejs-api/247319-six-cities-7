@@ -5,7 +5,7 @@ import { Component } from '../../types/component.enum.js';
 import { Logger } from '../../libs/logger/index.js';
 import { PlaceService } from './place-service.interface.js';
 import { fillDTO } from '../../helpers/index.js';
-import { CreatePlaceDto, PlaceRdo, PremiumPlaceRdo, UpdatePlaceDto } from './index.js';
+import { CreatePlaceDto, PlaceDetailedRdo, PlacePremiumRdo, UpdatePlaceDto } from './index.js';
 import { StatusCodes } from 'http-status-codes';
 import { CITIES } from '../../types/city.types.js';
 
@@ -21,15 +21,15 @@ export class PlaceController extends BaseController {
 
     this.addRoute({path: '/', method: HttpMethod.Get, handler: this.index});
     this.addRoute({path: '/', method: HttpMethod.Post, handler: this.create});
-    this.addRoute({path: '/:placeId', method: HttpMethod.Get, handler: this.getSpecificPlace});
-    this.addRoute({path: '/:placeId', method: HttpMethod.Patch, handler: this.updateSpecificPlace});
-    this.addRoute({path: '/:placeId', method: HttpMethod.Delete, handler: this.deleteSpecificPlace});
+    this.addRoute({path: '/:placeId', method: HttpMethod.Get, handler: this.get});
+    this.addRoute({path: '/:placeId', method: HttpMethod.Patch, handler: this.update});
+    this.addRoute({path: '/:placeId', method: HttpMethod.Delete, handler: this.delete});
     this.addRoute({path: '/premium/:city', method: HttpMethod.Get, handler: this.getPremium});
   }
 
   public async index(_req: Request, res: Response): Promise<void> {
     const places = await this.placeService.findAll();
-    const responseData = fillDTO(PlaceRdo, places);
+    const responseData = fillDTO(PlacePremiumRdo, places);
     this.ok(res, responseData);
   }
 
@@ -37,13 +37,11 @@ export class PlaceController extends BaseController {
     {body}: Request<RequestParams, RequestBody, CreatePlaceDto>,
     res: Response
   ): Promise<void> {
-    //Тут нет проверки на повтор перед созданием. По какому полю делать проверку? title или по координатам?
-    //логично сделать по id но его в теле запроса нет
     const result = await this.placeService.create(body);
-    this.created(res, fillDTO(PlaceRdo, result));
+    this.created(res, fillDTO(PlaceDetailedRdo, result));
   }
 
-  public async getSpecificPlace(req: Request, res: Response): Promise<void> {
+  public async get(req: Request, res: Response): Promise<void> {
     const placeId = req.params.placeId;
     const place = await this.placeService.findById(placeId);
 
@@ -55,21 +53,21 @@ export class PlaceController extends BaseController {
       );
     }
 
-    const responseData = fillDTO(PlaceRdo, place);
+    const responseData = fillDTO(PlaceDetailedRdo, place);
     this.ok(res, responseData);
   }
 
-  public async updateSpecificPlace(
+  public async update(
     req: Request<RequestParams, RequestBody, UpdatePlaceDto>,
     res: Response
   ): Promise<void> {
     const placeId = req.params.placeId as string;
     const body = req.body;
     const responseData = await this.placeService.update(placeId, body);
-    this.ok(res, fillDTO(PlaceRdo, responseData));
+    this.ok(res, fillDTO(PlaceDetailedRdo, responseData));
   }
 
-  public async deleteSpecificPlace(req: Request, res: Response): Promise<void> {
+  public async delete(req: Request, res: Response): Promise<void> {
     const placeId = req.params.placeId;
 
     const existPlace = await this.placeService.findById(placeId);
@@ -89,7 +87,7 @@ export class PlaceController extends BaseController {
   public async getPremium(req: Request, res: Response): Promise<void> {
     const city = req.params.city as typeof CITIES[number];
     const place = await this.placeService.findPremiumByCity(city);
-    const responseData = fillDTO(PremiumPlaceRdo, place);
+    const responseData = fillDTO(PlacePremiumRdo, place);
     this.ok(res, responseData);
   }
 }

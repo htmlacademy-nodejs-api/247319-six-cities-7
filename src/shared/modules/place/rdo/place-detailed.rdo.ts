@@ -1,7 +1,7 @@
 import { Expose } from 'class-transformer';
 import { City, TypePlace } from '../../../types/index.js';
 
-export class PlaceRdo {
+export class PlaceDetailedRdo {
   @Expose()
   public _id: string;
 

@@ -5,5 +5,5 @@ export { PlaceService } from './place-service.interface.js';
 export { DefaultPlaceService } from './default-place.service.js';
 export { createPlaceContainer } from './place.container.js';
 export { PlaceController } from './place.controller.js';
-export { PlaceRdo } from './rdo/place.rdo.js';
-export { PremiumPlaceRdo } from './rdo/premium-place.rdo.js';
+export { PlaceDetailedRdo } from './rdo/place-detailed.rdo.js';
+export { PlacePremiumRdo } from './rdo/place-premium.rdo.js';
