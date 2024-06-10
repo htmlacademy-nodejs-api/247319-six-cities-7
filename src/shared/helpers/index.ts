@@ -5,7 +5,9 @@ export {
   generateRandomRating,
   getRandomBoolean,
   getErrorMessage,
-  getRandomSixImages
+  getRandomSixImages,
+  fillDTO,
+  createErrorObject
 } from './common.js';
 
 export { getCurrentModuleDirectoryPath } from './file-system.js';

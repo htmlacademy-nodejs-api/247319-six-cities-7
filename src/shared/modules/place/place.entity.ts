@@ -48,10 +48,10 @@ export class PlaceEntity extends defaultClasses.TimeStamps {
   @prop({required: true})
   public isPremium!: boolean;
 
-  @prop({required: true})
+  @prop()
   public isFavorite!: boolean;
 
-  @prop({required: true, min: MIN_RATING, max: MAX_RATING})
+  @prop({min: MIN_RATING, max: MAX_RATING, default: null})
   public rating!: number;
 
   @prop({
@@ -90,7 +90,7 @@ export class PlaceEntity extends defaultClasses.TimeStamps {
   @prop({required: true})
   public longitude!: number;
 
-  @prop({})
+  @prop({default: 0})
   public reviewsCount: number;
 }
 
