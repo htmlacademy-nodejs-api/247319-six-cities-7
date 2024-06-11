@@ -84,4 +84,16 @@ export class DefaultPlaceService implements PlaceService {
   public async findPremiumByCity(city: typeof CITIES[number]): Promise<DocumentType<PlaceEntity>[] | null> {
     return this.placeModel.find({ city, isPremium: true }).populate(['userId']).exec();
   }
+
+  public async incReviewCount(placeId: string): Promise<DocumentType<PlaceEntity> | null> {
+    return this.placeModel
+      .findByIdAndUpdate(placeId, {'$inc': {
+        reviewCount: 1,
+      }}).exec();
+  }
+
+  public async exists(documentId: string): Promise<boolean> {
+    return (await this.placeModel
+      .exists({_id: documentId})) !== null;
+  }
 }

@@ -5,3 +5,4 @@ export { TypePlace } from './type-place.enum.js';
 export { User } from './user.types.js';
 export { MockServerData } from './mock-server-data.types.js';
 export { Component } from './component.enum.js';
+export { DocumentExists } from './document-exists.interface.js';
