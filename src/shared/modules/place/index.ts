@@ -7,3 +7,4 @@ export { createPlaceContainer } from './place.container.js';
 export { PlaceController } from './place.controller.js';
 export { PlaceDetailedRdo } from './rdo/place-detailed.rdo.js';
 export { PlacePremiumRdo } from './rdo/place-premium.rdo.js';
+export { CreatePlaceValidationMessage } from './dto/create-place.messages.js';

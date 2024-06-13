@@ -1,11 +1,11 @@
 import { inject, injectable } from 'inversify';
 import { Response } from 'express';
-import { BaseController, HttpError, HttpMethod } from '../../libs/rest/index.js';
+import { BaseController, HttpError, HttpMethod, ValidateDtoMiddleware } from '../../libs/rest/index.js';
 import { Component } from '../../types/component.enum.js';
 import { Logger } from '../../libs/logger/index.js';
 import { ReviewService } from './review-service.interface.js';
 import { PlaceService } from '../place/place-service.interface.js';
-import { CreateReviewRequest, ReviewRdo } from './index.js';
+import { CreateReviewDto, CreateReviewRequest, ReviewRdo } from './index.js';
 import { StatusCodes } from 'http-status-codes';
 import { fillDTO } from '../../helpers/common.js';
 
@@ -19,7 +19,7 @@ export class ReviewController extends BaseController {
     super(logger);
 
     this.logger.info('Register routes for ReviewController');
-    this.addRoute({path: '/', method: HttpMethod.Post, handler: this.create});
+    this.addRoute({path: '/', method: HttpMethod.Post, handler: this.create, middleware: [new ValidateDtoMiddleware(CreateReviewDto)]});
   }
 
   public async create(

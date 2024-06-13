@@ -1,6 +1,6 @@
 import { inject, injectable } from 'inversify';
 import { Request, Response } from 'express';
-import { BaseController, HttpError, HttpMethod, RequestBody, RequestParams } from '../../libs/rest/index.js';
+import { BaseController, HttpError, HttpMethod, RequestBody, RequestParams, ValidateDtoMiddleware, ValidateObjectIdMiddleware } from '../../libs/rest/index.js';
 import { Component } from '../../types/component.enum.js';
 import { Logger } from '../../libs/logger/index.js';
 import { PlaceService } from './place-service.interface.js';
@@ -20,14 +20,13 @@ export class PlaceController extends BaseController {
     super(logger);
 
     this.logger.info('Register routes for PlaceController');
-
+    this.addRoute({path: '/:placeId', method: HttpMethod.Get, handler: this.get, middleware: [new ValidateObjectIdMiddleware('placeId')]});
     this.addRoute({path: '/', method: HttpMethod.Get, handler: this.index});
-    this.addRoute({path: '/', method: HttpMethod.Post, handler: this.create});
-    this.addRoute({path: '/:placeId', method: HttpMethod.Get, handler: this.get});
-    this.addRoute({path: '/:placeId', method: HttpMethod.Patch, handler: this.update});
-    this.addRoute({path: '/:placeId', method: HttpMethod.Delete, handler: this.delete});
+    this.addRoute({path: '/', method: HttpMethod.Post, handler: this.create, middleware: [new ValidateDtoMiddleware(CreatePlaceDto)]});
+    this.addRoute({path: '/:placeId', method: HttpMethod.Patch, handler: this.update, middleware: [new ValidateObjectIdMiddleware('placeId'), new ValidateDtoMiddleware(UpdatePlaceDto)]});
+    this.addRoute({path: '/:placeId', method: HttpMethod.Delete, handler: this.delete, middleware: [new ValidateObjectIdMiddleware('placeId')]});
     this.addRoute({path: '/premium/:city', method: HttpMethod.Get, handler: this.getPremium});
-    this.addRoute({path: '/:placeId/reviews', method: HttpMethod.Get, handler: this.getReviews});
+    this.addRoute({path: '/:placeId/reviews', method: HttpMethod.Get, handler: this.getReviews, middleware: [new ValidateObjectIdMiddleware('placeId')]});
   }
 
   public async index(_req: Request, res: Response): Promise<void> {
