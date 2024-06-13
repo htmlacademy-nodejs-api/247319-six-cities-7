@@ -1,11 +1,11 @@
 import { inject, injectable } from 'inversify';
 import { Response } from 'express';
-import { BaseController, HttpError, HttpMethod } from '../../libs/rest/index.js';
+import { BaseController, HttpError, HttpMethod, ValidateDtoMiddleware } from '../../libs/rest/index.js';
 import { Component } from '../../types/index.js';
 import { Logger } from '../../libs/logger/index.js';
 import { UserService } from './user-service.interface.js';
 import { fillDTO } from '../../helpers/index.js';
-import { CreateUserRequest, UserRdo } from './index.js';
+import { CreateUserDto, CreateUserRequest, LoginUserDto, UserRdo } from './index.js';
 import { StatusCodes } from 'http-status-codes';
 import { Config, RestSchema } from '../../libs/config/index.js';
 import { LoginUserRequest } from './login-user-request.type.js';
@@ -22,8 +22,8 @@ export class UserController extends BaseController {
     this.logger.info('Register routes for UserController');
 
     // this.addRoute({path: '/', method: HttpMethod.Get, handler: this.index});
-    this.addRoute({path: '/register', method: HttpMethod.Post, handler: this.create});
-    this.addRoute({path: '/login', method: HttpMethod.Post, handler: this.login});
+    this.addRoute({path: '/register', method: HttpMethod.Post, handler: this.create, middleware: [new ValidateDtoMiddleware(CreateUserDto)]});
+    this.addRoute({path: '/login', method: HttpMethod.Post, handler: this.login, middleware: [new ValidateDtoMiddleware(LoginUserDto)]});
   }
 
   // public async index(_req: Request, res: Response): Promise<void> {

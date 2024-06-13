@@ -1,5 +1,6 @@
-import { Expose } from 'class-transformer';
+import { Expose, Type } from 'class-transformer';
 import { City, TypePlace } from '../../../types/index.js';
+import { UserRdo } from '../../user/index.js';
 
 export class PlaceDetailedRdo {
   @Expose()
@@ -48,11 +49,15 @@ export class PlaceDetailedRdo {
   public benefits: string[];
 
   @Expose()
-  public userId: string;
+  @Type(() => UserRdo)
+  public userId: UserRdo;
 
   @Expose()
   public latitude: number;
 
   @Expose()
   public longitude: number;
+
+  @Expose()
+  public reviewsCount: number;
 }

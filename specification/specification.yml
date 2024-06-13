@@ -368,7 +368,7 @@ paths:
             application/json:
               schema:
                 $ref: './error.resources.yml#/components/schemas/RequestError'
-  /reviews/${placeId}:
+  /${placeId}/reviews:
     get:
       tags:
         - REVIEWS
