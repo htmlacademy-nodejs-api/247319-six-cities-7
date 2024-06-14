@@ -9,6 +9,7 @@ import { CreatePlaceDto, PlaceDetailedRdo, PlacePremiumRdo, UpdatePlaceDto } fro
 import { StatusCodes } from 'http-status-codes';
 import { CITIES } from '../../types/city.types.js';
 import { ReviewRdo, ReviewService } from '../review/index.js';
+import { DEFAULT_PLACE_LIMIT } from './const/place-const.js';
 
 @injectable()
 export class PlaceController extends BaseController {
@@ -29,8 +30,9 @@ export class PlaceController extends BaseController {
     this.addRoute({path: '/:placeId/reviews', method: HttpMethod.Get, handler: this.getReviews, middleware: [new ValidateObjectIdMiddleware('placeId'), new DocumentExistsMiddleware(this.placeService, 'Place', 'placeId')]});
   }
 
-  public async index(_req: Request, res: Response): Promise<void> {
-    const places = await this.placeService.findAll();
+  public async index(req: Request, res: Response): Promise<void> {
+    const limit = req.query.limit ? Number(req.query.limit) : DEFAULT_PLACE_LIMIT;
+    const places = await this.placeService.findLimitCount(limit);
     const responseData = fillDTO(PlacePremiumRdo, places);
     this.ok(res, responseData);
   }

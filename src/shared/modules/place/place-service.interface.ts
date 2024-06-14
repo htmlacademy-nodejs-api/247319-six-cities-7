@@ -13,4 +13,5 @@ export interface PlaceService extends DocumentExists {
   findByCity(city: typeof CITIES[number]): Promise<DocumentType<PlaceEntity>[] | null>;
   incReviewCount(placeId: string): Promise<DocumentType<PlaceEntity> | null>;
   exists(documentId: string): Promise<boolean>;
+  findLimitCount(limit: number): Promise<DocumentType<PlaceEntity>[]>;
 }

@@ -73,6 +73,14 @@ export class DefaultPlaceService implements PlaceService {
       ]).exec();
   }
 
+  public async findLimitCount(limit: number): Promise<DocumentType<PlaceEntity>[]> {
+    return (await this.placeModel
+      .find({}, {}, {limit})
+      .populate(['userId'])
+      .exec()
+    );
+  }
+
   public async findById(placeId: string): Promise<DocumentType<PlaceEntity> | null> {
     return this.placeModel.findById(placeId).populate(['userId']).exec();
   }
