@@ -12,4 +12,5 @@ export interface PlaceService extends DocumentExists {
   findPremiumByCity(city: typeof CITIES[number]): Promise<DocumentType<PlaceEntity>[] | null>;
   findByCity(city: typeof CITIES[number]): Promise<DocumentType<PlaceEntity>[] | null>;
   incReviewCount(placeId: string): Promise<DocumentType<PlaceEntity> | null>;
-  exists(documentId: string): Promise<boolean>;}
+  exists(documentId: string): Promise<boolean>;
+}

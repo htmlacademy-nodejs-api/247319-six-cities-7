@@ -1,6 +1,6 @@
 import { inject, injectable } from 'inversify';
 import { Request, Response } from 'express';
-import { BaseController, HttpError, HttpMethod, RequestBody, RequestParams, ValidateDtoMiddleware, ValidateObjectIdMiddleware } from '../../libs/rest/index.js';
+import { BaseController, DocumentExistsMiddleware, HttpError, HttpMethod, RequestBody, RequestParams, ValidateDtoMiddleware, ValidateObjectIdMiddleware } from '../../libs/rest/index.js';
 import { Component } from '../../types/component.enum.js';
 import { Logger } from '../../libs/logger/index.js';
 import { PlaceService } from './place-service.interface.js';
@@ -20,13 +20,13 @@ export class PlaceController extends BaseController {
     super(logger);
 
     this.logger.info('Register routes for PlaceController');
-    this.addRoute({path: '/:placeId', method: HttpMethod.Get, handler: this.get, middleware: [new ValidateObjectIdMiddleware('placeId')]});
+    this.addRoute({path: '/:placeId', method: HttpMethod.Get, handler: this.get, middleware: [new ValidateObjectIdMiddleware('placeId'), new DocumentExistsMiddleware(this.placeService, 'Place', 'placeId')]});
     this.addRoute({path: '/', method: HttpMethod.Get, handler: this.index});
     this.addRoute({path: '/', method: HttpMethod.Post, handler: this.create, middleware: [new ValidateDtoMiddleware(CreatePlaceDto)]});
-    this.addRoute({path: '/:placeId', method: HttpMethod.Patch, handler: this.update, middleware: [new ValidateObjectIdMiddleware('placeId'), new ValidateDtoMiddleware(UpdatePlaceDto)]});
-    this.addRoute({path: '/:placeId', method: HttpMethod.Delete, handler: this.delete, middleware: [new ValidateObjectIdMiddleware('placeId')]});
+    this.addRoute({path: '/:placeId', method: HttpMethod.Patch, handler: this.update, middleware: [new ValidateObjectIdMiddleware('placeId'), new DocumentExistsMiddleware(this.placeService, 'Place', 'placeId'), new ValidateDtoMiddleware(UpdatePlaceDto)]});
+    this.addRoute({path: '/:placeId', method: HttpMethod.Delete, handler: this.delete, middleware: [new ValidateObjectIdMiddleware('placeId'), new DocumentExistsMiddleware(this.placeService, 'Place', 'placeId')]});
     this.addRoute({path: '/premium/:city', method: HttpMethod.Get, handler: this.getPremium});
-    this.addRoute({path: '/:placeId/reviews', method: HttpMethod.Get, handler: this.getReviews, middleware: [new ValidateObjectIdMiddleware('placeId')]});
+    this.addRoute({path: '/:placeId/reviews', method: HttpMethod.Get, handler: this.getReviews, middleware: [new ValidateObjectIdMiddleware('placeId'), new DocumentExistsMiddleware(this.placeService, 'Place', 'placeId')]});
   }
 
   public async index(_req: Request, res: Response): Promise<void> {
@@ -46,15 +46,6 @@ export class PlaceController extends BaseController {
   public async get(req: Request, res: Response): Promise<void> {
     const placeId = req.params.placeId;
     const place = await this.placeService.findById(placeId);
-
-    if (! place) {
-      throw new HttpError(
-        StatusCodes.NOT_FOUND,
-        `Place with id: ${placeId} not found`,
-        'PlaceController'
-      );
-    }
-
     const responseData = fillDTO(PlaceDetailedRdo, place);
     this.ok(res, responseData);
   }
@@ -71,17 +62,6 @@ export class PlaceController extends BaseController {
 
   public async delete(req: Request, res: Response): Promise<void> {
     const placeId = req.params.placeId;
-
-    const existPlace = await this.placeService.findById(placeId);
-
-    if (! existPlace) {
-      throw new HttpError(
-        StatusCodes.NOT_FOUND,
-        `Place with id: ${placeId} not found`,
-        'PlaceController'
-      );
-    }
-
     const result = await this.placeService.delete(placeId);
     await this.reviewService.deleteByPlaceId(placeId);
     this.noContent(res, result);
@@ -96,16 +76,6 @@ export class PlaceController extends BaseController {
 
   public async getReviews(req: Request, res: Response): Promise<void> {
     const placeId = req.params.placeId;
-    const existPlace = await this.placeService.findById(placeId);
-
-    if (! existPlace) {
-      throw new HttpError(
-        StatusCodes.NOT_FOUND,
-        `Place with id: ${placeId} not found`,
-        'PlaceController'
-      );
-    }
-
     const reviews = await this.reviewService.findByPlaceId(placeId);
 
     if (! reviews) {
