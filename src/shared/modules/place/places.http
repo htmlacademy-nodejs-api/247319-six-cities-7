@@ -39,7 +39,7 @@ Content-Type: application/json
 ###
 
 ## Get place by placeId
-GET http://localhost:4000/places/664d1102a83e76469bdbe36d HTTP/1.1
+GET http://localhost:4000/places/664d1102a83e76469bdbe1a4 HTTP/1.1
 
 ###
 

@@ -19,14 +19,22 @@ export class ReviewController extends BaseController {
     super(logger);
 
     this.logger.info('Register routes for ReviewController');
-    this.addRoute({path: '/', method: HttpMethod.Post, handler: this.create, middleware: [new ValidateDtoMiddleware(CreateReviewDto)]});
+    this.addRoute({
+      path: '/',
+      method: HttpMethod.Post,
+      handler: this.create,
+      middleware: [
+        new ValidateDtoMiddleware(CreateReviewDto)]
+    });
   }
 
   public async create(
     {body}: CreateReviewRequest,
     res: Response
   ): Promise<void> {
-    if (! await this.placeService.exists(body.placeId)) {
+    const place = await this.placeService.findById(body.placeId);
+
+    if (! place) {
       throw new HttpError(
         StatusCodes.NOT_FOUND,
         `Place with id: ${body.placeId} not found`,
@@ -35,7 +43,7 @@ export class ReviewController extends BaseController {
     }
 
     const review = await this.reviewService.create(body);
-    await this.placeService.incReviewCount(body.placeId);
+    await this.placeService.updatePlaceStatistics(place, body.rating);
     this.created(res, fillDTO(ReviewRdo, review));
   }
 }

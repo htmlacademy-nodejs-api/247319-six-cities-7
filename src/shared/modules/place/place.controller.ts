@@ -9,7 +9,7 @@ import { CreatePlaceDto, PlaceDetailedRdo, PlacePremiumRdo, UpdatePlaceDto } fro
 import { StatusCodes } from 'http-status-codes';
 import { CITIES } from '../../types/city.types.js';
 import { ReviewRdo, ReviewService } from '../review/index.js';
-import { DEFAULT_PLACE_LIMIT } from './const/place-const.js';
+import { DEFAULT_PLACE_LIMIT } from './const/index.js';
 
 @injectable()
 export class PlaceController extends BaseController {
@@ -21,18 +21,54 @@ export class PlaceController extends BaseController {
     super(logger);
 
     this.logger.info('Register routes for PlaceController');
-    this.addRoute({path: '/:placeId', method: HttpMethod.Get, handler: this.get, middleware: [new ValidateObjectIdMiddleware('placeId'), new DocumentExistsMiddleware(this.placeService, 'Place', 'placeId')]});
+    this.addRoute({
+      path: '/:placeId',
+      method: HttpMethod.Get,
+      handler: this.get,
+      middleware: [
+        new ValidateObjectIdMiddleware('placeId'),
+        new DocumentExistsMiddleware(this.placeService, 'Place', 'placeId')
+      ]
+    });
     this.addRoute({path: '/', method: HttpMethod.Get, handler: this.index});
-    this.addRoute({path: '/', method: HttpMethod.Post, handler: this.create, middleware: [new ValidateDtoMiddleware(CreatePlaceDto)]});
-    this.addRoute({path: '/:placeId', method: HttpMethod.Patch, handler: this.update, middleware: [new ValidateObjectIdMiddleware('placeId'), new DocumentExistsMiddleware(this.placeService, 'Place', 'placeId'), new ValidateDtoMiddleware(UpdatePlaceDto)]});
-    this.addRoute({path: '/:placeId', method: HttpMethod.Delete, handler: this.delete, middleware: [new ValidateObjectIdMiddleware('placeId'), new DocumentExistsMiddleware(this.placeService, 'Place', 'placeId')]});
+    this.addRoute({
+      path: '/',
+      method: HttpMethod.Post,
+      handler: this.create,
+      middleware: [new ValidateDtoMiddleware(CreatePlaceDto)]
+    });
+    this.addRoute({
+      path: '/:placeId',
+      method: HttpMethod.Patch,
+      handler: this.update,
+      middleware: [new ValidateObjectIdMiddleware('placeId'),
+        new DocumentExistsMiddleware(this.placeService, 'Place', 'placeId'),
+        new ValidateDtoMiddleware(UpdatePlaceDto)
+      ]
+    });
+    this.addRoute({
+      path: '/:placeId',
+      method: HttpMethod.Delete,
+      handler: this.delete,
+      middleware: [
+        new ValidateObjectIdMiddleware('placeId'),
+        new DocumentExistsMiddleware(this.placeService, 'Place', 'placeId')
+      ]
+    });
     this.addRoute({path: '/premium/:city', method: HttpMethod.Get, handler: this.getPremium});
-    this.addRoute({path: '/:placeId/reviews', method: HttpMethod.Get, handler: this.getReviews, middleware: [new ValidateObjectIdMiddleware('placeId'), new DocumentExistsMiddleware(this.placeService, 'Place', 'placeId')]});
+    this.addRoute({
+      path: '/:placeId/reviews',
+      method: HttpMethod.Get,
+      handler: this.getReviews,
+      middleware: [new ValidateObjectIdMiddleware('placeId'),
+        new DocumentExistsMiddleware(this.placeService, 'Place', 'placeId')
+      ]
+    });
   }
 
   public async index(req: Request, res: Response): Promise<void> {
     const limit = req.query.limit ? Number(req.query.limit) : DEFAULT_PLACE_LIMIT;
-    const places = await this.placeService.findLimitCount(limit);
+    const places = await this.placeService.findAll(limit);
     const responseData = fillDTO(PlacePremiumRdo, places);
     this.ok(res, responseData);
   }
@@ -83,7 +119,7 @@ export class PlaceController extends BaseController {
     if (! reviews) {
       throw new HttpError(
         StatusCodes.NOT_FOUND,
-        `Place with id: ${placeId} didnt have reviews`,
+        `Place with id: ${placeId} didn't have reviews`,
         'PlaceController'
       );
     }

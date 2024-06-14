@@ -4,7 +4,6 @@ import { CreatePlaceDto, UpdatePlaceDto, PlaceEntity, PlaceService } from './ind
 import { Component } from '../../types/index.js';
 import { Logger } from '../../libs/logger/index.js';
 import { CITIES } from '../../types/city.types.js';
-import { MAX_PLACE_COUNT } from './const/place-const.js';
 
 @injectable()
 export class DefaultPlaceService implements PlaceService {
@@ -44,41 +43,8 @@ export class DefaultPlaceService implements PlaceService {
     return deletedPlace;
   }
 
-  public async findAll(): Promise<DocumentType<PlaceEntity>[] | null> {
-    return this.placeModel
-      .aggregate([
-        {
-          $lookup: {
-            from: 'reviews',
-            let: {placeId: '$_id'},
-            pipeline: [
-              {$match: {$expr: {$eq: ['$placeId', '$$placeId']}}},
-              {$group: {_id: null, averageRating: {$avg: '$rating'}, reviewsCount: {$sum: 1}}},
-            ],
-            as: 'reviews'
-          }
-        },
-        {
-          $addFields: {
-            reviewsCount: {$arrayElemAt: ['$reviews.reviewsCount', 0]},
-            averageRating: {$arrayElemAt: ['$reviews.averageRating', 0]}
-          }
-        },
-        {
-          $unset: 'reviews'
-        },
-        {
-          $limit: MAX_PLACE_COUNT
-        },
-      ]).exec();
-  }
-
-  public async findLimitCount(limit: number): Promise<DocumentType<PlaceEntity>[]> {
-    return (await this.placeModel
-      .find({}, {}, {limit})
-      .populate(['userId'])
-      .exec()
-    );
+  public async findAll(limit: number): Promise<DocumentType<PlaceEntity>[] | null> {
+    return this.placeModel.find().populate(['userId']).limit(limit).exec();
   }
 
   public async findById(placeId: string): Promise<DocumentType<PlaceEntity> | null> {
@@ -93,11 +59,16 @@ export class DefaultPlaceService implements PlaceService {
     return this.placeModel.find({ city, isPremium: true }).populate(['userId']).exec();
   }
 
-  public async incReviewCount(placeId: string): Promise<DocumentType<PlaceEntity> | null> {
+  public async updatePlaceStatistics(place: PlaceEntity, rating: number): Promise<DocumentType<PlaceEntity> | null> {
     return this.placeModel
-      .findByIdAndUpdate(placeId, {'$inc': {
-        reviewCount: 1,
-      }}).exec();
+      .findByIdAndUpdate(place.id,
+        {
+          '$inc': {
+            reviewsCount: 1,
+            rating: rating,
+          },
+          averageRating: (place.rating + rating) / (place.reviewsCount + 1)
+        }).exec();
   }
 
   public async exists(documentId: string): Promise<boolean> {

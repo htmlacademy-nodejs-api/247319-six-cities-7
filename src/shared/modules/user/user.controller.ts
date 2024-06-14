@@ -21,17 +21,35 @@ export class UserController extends BaseController {
 
     this.logger.info('Register routes for UserController');
 
-    // this.addRoute({path: '/', method: HttpMethod.Get, handler: this.index});
-    this.addRoute({path: '/register', method: HttpMethod.Post, handler: this.create, middleware: [new ValidateDtoMiddleware(CreateUserDto)]});
-    this.addRoute({path: '/login', method: HttpMethod.Post, handler: this.login, middleware: [new ValidateDtoMiddleware(LoginUserDto)]});
-    this.addRoute({path: '/:userId/avatar', method: HttpMethod.Post, handler: this.uploadAvatar, middleware: [new ValidateObjectIdMiddleware('userId'), new UploadFileMiddleware(this.configService.get('UPLOAD_DIRECTORY'), 'avatar')]});
+    this.addRoute({path: '/', method: HttpMethod.Get, handler: this.index});
+    this.addRoute({
+      path: '/register',
+      method: HttpMethod.Post,
+      handler: this.create,
+      middleware: [new ValidateDtoMiddleware(CreateUserDto)]
+    });
+    this.addRoute({
+      path: '/login',
+      method: HttpMethod.Post,
+      handler: this.login,
+      middleware: [new ValidateDtoMiddleware(LoginUserDto)]
+    });
+    this.addRoute({
+      path: '/:userId/avatar',
+      method: HttpMethod.Post,
+      handler: this.uploadAvatar,
+      middleware: [
+        new ValidateObjectIdMiddleware('userId'),
+        new UploadFileMiddleware(this.configService.get('UPLOAD_DIRECTORY'), 'avatar')
+      ]
+    });
   }
 
-  // public async index(_req: Request, res: Response): Promise<void> {
-  //   const users = await this.userService.find();
-  //   const responseData = fillDTO(UserRdo, users);
-  //   this.ok(res, responseData);
-  // }
+  public async index(_req: Request, res: Response): Promise<void> {
+    const users = await this.userService.find();
+    const responseData = fillDTO(UserRdo, users);
+    this.ok(res, responseData);
+  }
 
   public async create(
     {body}: CreateUserRequest,

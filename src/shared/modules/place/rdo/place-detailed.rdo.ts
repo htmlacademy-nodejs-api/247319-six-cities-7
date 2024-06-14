@@ -4,7 +4,7 @@ import { UserRdo } from '../../user/index.js';
 
 export class PlaceDetailedRdo {
   @Expose()
-  public _id: string;
+  public id: string;
 
   @Expose()
   public title: string;
@@ -31,7 +31,7 @@ export class PlaceDetailedRdo {
   public isFavorite: boolean;
 
   @Expose()
-  public rating: number;
+  public averageRating: number;
 
   @Expose()
   public typePlace: TypePlace;

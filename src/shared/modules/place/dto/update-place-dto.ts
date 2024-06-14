@@ -1,5 +1,5 @@
 import { City, TypePlace } from '../../../types/index.js';
-import { IsArray, Min, Max, IsDateString, IsEnum, IsInt, IsIn, MaxLength, MinLength, IsMongoId, IsBoolean, Length, IsOptional } from 'class-validator';
+import { IsArray, Min, Max, IsDateString, IsEnum, IsInt, IsIn, MaxLength, MinLength, IsMongoId, IsBoolean, IsOptional, ArrayMaxSize } from 'class-validator';
 import { UpdatePlaceValidationMessage } from './update-place.messages.js';
 import { CITIES } from '../../../types/city.types.js';
 
@@ -23,12 +23,13 @@ export class UpdatePlaceDto {
   public city?: City;
 
   @IsOptional()
-  @Length(1, 1, {message: UpdatePlaceValidationMessage.previewImage.Length})
+  @MaxLength(256, {message: UpdatePlaceValidationMessage.previewImage.maxLength})
   public previewImage?: string;
 
   @IsOptional()
+  @ArrayMaxSize(6)
   @IsArray({message: UpdatePlaceValidationMessage.images.invalidFormat})
-  @Length(6, 6, {message: UpdatePlaceValidationMessage.images.Length})
+  @MaxLength(256, {message: UpdatePlaceValidationMessage.images.maxLength})
   public images?: string[];
 
   @IsOptional()

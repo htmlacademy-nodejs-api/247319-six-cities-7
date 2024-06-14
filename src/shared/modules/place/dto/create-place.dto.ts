@@ -1,5 +1,5 @@
 import { City, TypePlace } from '../../../types/index.js';
-import { IsArray, Min, Max, IsDateString, IsEnum, IsInt, IsIn, MaxLength, MinLength, IsMongoId, IsBoolean, Length } from 'class-validator';
+import { IsArray, Min, Max, IsDateString, IsEnum, IsInt, IsIn, MaxLength, MinLength, IsString, IsMongoId, IsBoolean, ArrayMaxSize, ArrayMinSize } from 'class-validator';
 import { CreatePlaceValidationMessage } from './create-place.messages.js';
 import { CITIES } from '../../../types/city.types.js';
 export class CreatePlaceDto {
@@ -17,11 +17,13 @@ export class CreatePlaceDto {
   @IsIn(CITIES, {message: CreatePlaceValidationMessage.city.invalid})
   public city: City;
 
-  @Length(1, 1, {message: CreatePlaceValidationMessage.previewImage.Length})
+  @MaxLength(256, {message: CreatePlaceValidationMessage.previewImage.maxLength})
   public previewImage: string;
 
-  @IsArray({message: CreatePlaceValidationMessage.images.invalidFormat})
-  @Length(6, 6, {message: CreatePlaceValidationMessage.images.Length})
+  @IsString({each: true, message: CreatePlaceValidationMessage.images.invalidFormat})
+  @ArrayMaxSize(6)
+  @ArrayMinSize(6)
+  @MaxLength(256, {each: true, message: CreatePlaceValidationMessage.images.maxLength})
   public images: string[];
 
   @IsBoolean()

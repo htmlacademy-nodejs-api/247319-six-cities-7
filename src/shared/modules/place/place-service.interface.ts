@@ -8,10 +8,9 @@ export interface PlaceService extends DocumentExists {
   findById(placeId: string): Promise<DocumentType<PlaceEntity> | null>;
   update(placeId: string, dto: UpdatePlaceDto): Promise<DocumentType<PlaceEntity> | null>;
   delete(placeId: string): Promise<DocumentType<PlaceEntity> | null>;
-  findAll(): Promise<DocumentType<PlaceEntity>[] | null>;
+  findAll(limit: number): Promise<DocumentType<PlaceEntity>[] | null>;
   findPremiumByCity(city: typeof CITIES[number]): Promise<DocumentType<PlaceEntity>[] | null>;
   findByCity(city: typeof CITIES[number]): Promise<DocumentType<PlaceEntity>[] | null>;
-  incReviewCount(placeId: string): Promise<DocumentType<PlaceEntity> | null>;
+  updatePlaceStatistics(place: PlaceEntity, rating: number): Promise<DocumentType<PlaceEntity> | null>;
   exists(documentId: string): Promise<boolean>;
-  findLimitCount(limit: number): Promise<DocumentType<PlaceEntity>[]>;
 }

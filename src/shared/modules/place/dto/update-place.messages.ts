@@ -27,11 +27,11 @@ export const UpdatePlaceValidationMessage = {
     invalid: 'City must be a Paris, Cologne, Brussels, Amsterdam, Hamburg or Dusseldorf',
   },
   previewImage: {
-    Length: 'one previewImage must be exist',
+    maxLength: 'one previewImage must be exist',
   },
   images: {
     invalidFormat: 'Field images must be an array',
-    Length: 'Count images must be 6',
+    maxLength: 'Count images must be 6',
   },
   typePlace: {
     invalidFormat: 'typePlace must be an Apartment, House, Room or Hotel',

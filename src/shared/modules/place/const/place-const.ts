@@ -10,5 +10,4 @@ export const MIN_GUESTS = 1;
 export const MAX_GUESTS = 10;
 export const MIN_PRICE = 100;
 export const MAX_PRICE = 100000;
-export const MAX_PLACE_COUNT = 20;
 export const DEFAULT_PLACE_LIMIT = 60;
