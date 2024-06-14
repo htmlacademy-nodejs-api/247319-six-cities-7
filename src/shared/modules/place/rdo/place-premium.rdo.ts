@@ -3,6 +3,9 @@ import { City, TypePlace } from '../../../types/index.js';
 
 export class PlacePremiumRdo {
   @Expose()
+  public id: string;
+
+  @Expose()
   public price: number;
 
   @Expose()
@@ -27,7 +30,7 @@ export class PlacePremiumRdo {
   public isPremium: boolean;
 
   @Expose()
-  public rating: number;
+  public averageRating: number;
 
   @Expose()
   public reviewsCount: number;

@@ -88,12 +88,14 @@ npm run mock:server
 
 Содержит следующие переменные окружения.
 
-`PORT`=4000 - **Port for incoming connections**
-`SALT`=jduJSSHNWPdk23l - **Salt for password hash**
-`DB_HOST`=127.0.0.1 - **IP address of the database server (MongoDB)**
-`DB_USER`=Roman - **Username to connect to the database**
-`DB_PASSWORD`=test - **Password to connect to the database**
-`DB_PORT`=27017 - **Port to connect to the database (MongoDB)**
+`PORT` - **Port for incoming connections**
+`SALT` - **Salt for password hash**
+`DB_HOST` - **IP address of the database server (MongoDB)**
+`DB_USER` - **Username to connect to the database**
+`DB_PASSWORD` - **Password to connect to the database**
+`DB_PORT` - **Port to connect to the database (MongoDB)**
+`DB_NAME` - **Name DB(MongoDB)**
+`UPLOAD_DIRECTORY`**Directory for upload file from users**
 
 ### Файл `Contributing.md`
 

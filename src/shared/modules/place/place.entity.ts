@@ -51,8 +51,11 @@ export class PlaceEntity extends defaultClasses.TimeStamps {
   @prop()
   public isFavorite!: boolean;
 
-  @prop({min: MIN_RATING, max: MAX_RATING, default: null})
+  @prop({default: null})
   public rating!: number;
+
+  @prop({min: MIN_RATING, max: MAX_RATING, default: null})
+  public averageRating!: number;
 
   @prop({
     required: true,

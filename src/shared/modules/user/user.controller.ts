@@ -1,6 +1,6 @@
 import { inject, injectable } from 'inversify';
-import { Response } from 'express';
-import { BaseController, HttpError, HttpMethod, ValidateDtoMiddleware } from '../../libs/rest/index.js';
+import { Request, Response } from 'express';
+import { BaseController, HttpError, HttpMethod, UploadFileMiddleware, ValidateDtoMiddleware, ValidateObjectIdMiddleware } from '../../libs/rest/index.js';
 import { Component } from '../../types/index.js';
 import { Logger } from '../../libs/logger/index.js';
 import { UserService } from './user-service.interface.js';
@@ -21,16 +21,35 @@ export class UserController extends BaseController {
 
     this.logger.info('Register routes for UserController');
 
-    // this.addRoute({path: '/', method: HttpMethod.Get, handler: this.index});
-    this.addRoute({path: '/register', method: HttpMethod.Post, handler: this.create, middleware: [new ValidateDtoMiddleware(CreateUserDto)]});
-    this.addRoute({path: '/login', method: HttpMethod.Post, handler: this.login, middleware: [new ValidateDtoMiddleware(LoginUserDto)]});
+    this.addRoute({path: '/', method: HttpMethod.Get, handler: this.index});
+    this.addRoute({
+      path: '/register',
+      method: HttpMethod.Post,
+      handler: this.create,
+      middleware: [new ValidateDtoMiddleware(CreateUserDto)]
+    });
+    this.addRoute({
+      path: '/login',
+      method: HttpMethod.Post,
+      handler: this.login,
+      middleware: [new ValidateDtoMiddleware(LoginUserDto)]
+    });
+    this.addRoute({
+      path: '/:userId/avatar',
+      method: HttpMethod.Post,
+      handler: this.uploadAvatar,
+      middleware: [
+        new ValidateObjectIdMiddleware('userId'),
+        new UploadFileMiddleware(this.configService.get('UPLOAD_DIRECTORY'), 'avatar')
+      ]
+    });
   }
 
-  // public async index(_req: Request, res: Response): Promise<void> {
-  //   const users = await this.userService.find();
-  //   const responseData = fillDTO(UserRdo, users);
-  //   this.ok(res, responseData);
-  // }
+  public async index(_req: Request, res: Response): Promise<void> {
+    const users = await this.userService.find();
+    const responseData = fillDTO(UserRdo, users);
+    this.ok(res, responseData);
+  }
 
   public async create(
     {body}: CreateUserRequest,
@@ -68,5 +87,11 @@ export class UserController extends BaseController {
       'Not implemented',
       'UserController',
     );
+  }
+
+  public async uploadAvatar(req: Request, res: Response) {
+    this.created(res, {
+      filepath: req.file?.path
+    });
   }
 }
