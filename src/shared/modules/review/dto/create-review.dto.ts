@@ -15,6 +15,5 @@ export class CreateReviewDto {
   @IsMongoId()
   public placeId: string;
 
-  @IsMongoId()
   public userId: string;
 }

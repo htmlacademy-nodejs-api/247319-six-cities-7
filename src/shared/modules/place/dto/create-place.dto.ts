@@ -1,5 +1,5 @@
 import { City, TypePlace } from '../../../types/index.js';
-import { IsArray, Min, Max, IsDateString, IsEnum, IsInt, IsIn, MaxLength, MinLength, IsString, IsMongoId, IsBoolean, ArrayMaxSize, ArrayMinSize } from 'class-validator';
+import { IsArray, Min, Max, IsDateString, IsEnum, IsInt, IsIn, MaxLength, MinLength, IsString, IsBoolean, ArrayMaxSize, ArrayMinSize } from 'class-validator';
 import { CreatePlaceValidationMessage } from './create-place.messages.js';
 import { CITIES } from '../../../types/city.types.js';
 export class CreatePlaceDto {
@@ -50,7 +50,6 @@ export class CreatePlaceDto {
   @IsArray({message: CreatePlaceValidationMessage.benefits.invalidFormat})
   public benefits: string[];
 
-  @IsMongoId({message: CreatePlaceValidationMessage.userId.invalidId})
   public userId: string;
 
   //Нужны тут проверки? или эти поля автоматически будут подставляться?

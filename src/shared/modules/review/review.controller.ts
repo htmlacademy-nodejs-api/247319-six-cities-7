@@ -1,6 +1,6 @@
 import { inject, injectable } from 'inversify';
 import { Response } from 'express';
-import { BaseController, HttpError, HttpMethod, ValidateDtoMiddleware } from '../../libs/rest/index.js';
+import { BaseController, HttpError, HttpMethod, ValidateDtoMiddleware, PrivateRouteMiddleware } from '../../libs/rest/index.js';
 import { Component } from '../../types/component.enum.js';
 import { Logger } from '../../libs/logger/index.js';
 import { ReviewService } from './review-service.interface.js';
@@ -24,12 +24,13 @@ export class ReviewController extends BaseController {
       method: HttpMethod.Post,
       handler: this.create,
       middleware: [
+        new PrivateRouteMiddleware(),
         new ValidateDtoMiddleware(CreateReviewDto)]
     });
   }
 
   public async create(
-    {body}: CreateReviewRequest,
+    {body, tokenPayload}: CreateReviewRequest,
     res: Response
   ): Promise<void> {
     const place = await this.placeService.findById(body.placeId);
@@ -41,8 +42,7 @@ export class ReviewController extends BaseController {
         'ReviewController'
       );
     }
-
-    const review = await this.reviewService.create(body);
+    const review = await this.reviewService.create({...body, userId: tokenPayload.id});
     await this.placeService.updatePlaceStatistics(place, body.rating);
     this.created(res, fillDTO(ReviewRdo, review));
   }

@@ -1,6 +1,6 @@
 import { inject, injectable } from 'inversify';
 import { Request, Response } from 'express';
-import { BaseController, DocumentExistsMiddleware, HttpError, HttpMethod, RequestBody, RequestParams, ValidateDtoMiddleware, ValidateObjectIdMiddleware } from '../../libs/rest/index.js';
+import { BaseController, DocumentExistsMiddleware, HttpError, HttpMethod, PrivateRouteMiddleware, RequestBody, RequestParams, ValidateDtoMiddleware, ValidateObjectIdMiddleware } from '../../libs/rest/index.js';
 import { Component } from '../../types/component.enum.js';
 import { Logger } from '../../libs/logger/index.js';
 import { PlaceService } from './place-service.interface.js';
@@ -35,13 +35,17 @@ export class PlaceController extends BaseController {
       path: '/',
       method: HttpMethod.Post,
       handler: this.create,
-      middleware: [new ValidateDtoMiddleware(CreatePlaceDto)]
+      middleware: [
+        new PrivateRouteMiddleware(),
+        new ValidateDtoMiddleware(CreatePlaceDto)]
     });
     this.addRoute({
       path: '/:placeId',
       method: HttpMethod.Patch,
       handler: this.update,
-      middleware: [new ValidateObjectIdMiddleware('placeId'),
+      middleware: [
+        new PrivateRouteMiddleware(),
+        new ValidateObjectIdMiddleware('placeId'),
         new DocumentExistsMiddleware(this.placeService, 'Place', 'placeId'),
         new ValidateDtoMiddleware(UpdatePlaceDto)
       ]
@@ -51,6 +55,7 @@ export class PlaceController extends BaseController {
       method: HttpMethod.Delete,
       handler: this.delete,
       middleware: [
+        new PrivateRouteMiddleware(),
         new ValidateObjectIdMiddleware('placeId'),
         new DocumentExistsMiddleware(this.placeService, 'Place', 'placeId')
       ]
@@ -60,7 +65,8 @@ export class PlaceController extends BaseController {
       path: '/:placeId/reviews',
       method: HttpMethod.Get,
       handler: this.getReviews,
-      middleware: [new ValidateObjectIdMiddleware('placeId'),
+      middleware: [
+        new ValidateObjectIdMiddleware('placeId'),
         new DocumentExistsMiddleware(this.placeService, 'Place', 'placeId')
       ]
     });
@@ -74,10 +80,10 @@ export class PlaceController extends BaseController {
   }
 
   public async create(
-    {body}: Request<RequestParams, RequestBody, CreatePlaceDto>,
+    {body, tokenPayload}: Request<RequestParams, RequestBody, CreatePlaceDto>,
     res: Response
   ): Promise<void> {
-    const result = await this.placeService.create(body);
+    const result = await this.placeService.create({...body, userId: tokenPayload.id});
     this.created(res, fillDTO(PlaceDetailedRdo, result));
   }
 
