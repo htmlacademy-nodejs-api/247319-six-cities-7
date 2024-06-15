@@ -1,7 +1,7 @@
 import { Expose } from 'class-transformer';
 import { City, TypePlace } from '../../../types/index.js';
 
-export class PlacePremiumRdo {
+export class PlaceFavoritesRdo {
   @Expose()
   public id: string;
 
@@ -13,6 +13,9 @@ export class PlacePremiumRdo {
 
   @Expose()
   public typePlace: TypePlace;
+
+  @Expose()
+  public isFavorite: boolean;
 
   @Expose()
   public postDate: Date;

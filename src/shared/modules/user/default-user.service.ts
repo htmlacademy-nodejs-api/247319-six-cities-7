@@ -52,26 +52,4 @@ export class DefaultUserService implements UserService {
   public async updateById(userId: string, dto: UpdateUserDto): Promise<DocumentType<UserEntity> | null> {
     return this.userModel.findByIdAndUpdate(userId, dto, {new: true}).exec();
   }
-  //? как реализовать логин?
-  // public async login(email: string, password: string): Promise<DocumentType<UserEntity> | null> {
-  //   const user = await this.findByEmail(email);
-
-  //   if (user && user.verifyPassword(password)) {
-  //     this.logger.info(`User authenticated: ${email}`);
-  //     return user;
-  //   }
-
-  //   this.logger.warn(`Authentication failed for user: ${email}`);
-  //   return null;
-  // }
-
-  //? как реализовать логаут?
-  // public async logout(userId: string):Promise<void> {
-  //   this.logger.info(`User logged out: ${userId}`);
-  // }
-  //? как реализовать чек состояния?
-  // public async checkUserState(userId: string): Promise<boolean> {
-  //   const user = await this.findById(userId);
-  //   return !!user;
-  // }
 }
