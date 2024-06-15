@@ -7,6 +7,7 @@ import { createRestApplicationContainer } from './rest/rest.container.js';
 import { createUserContainer } from './shared/modules/user/index.js';
 import { createPlaceContainer } from './shared/modules/place/index.js';
 import { createReviewContainer } from './shared/modules/review/index.js';
+import { createAuthContainer } from './shared/modules/auth/index.js';
 
 async function bootstrap() {
   const appContainer = Container.merge(
@@ -14,6 +15,7 @@ async function bootstrap() {
     createUserContainer(),
     createPlaceContainer(),
     createReviewContainer(),
+    createAuthContainer(),
   );
 
   const application = appContainer.get<RestApplication>(Component.RestApplication);
