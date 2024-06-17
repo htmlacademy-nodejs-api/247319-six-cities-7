@@ -10,6 +10,7 @@ import { StatusCodes } from 'http-status-codes';
 import { CITIES } from '../../types/city.types.js';
 import { ReviewRdo, ReviewService } from '../review/index.js';
 import { DEFAULT_PLACE_LIMIT } from './const/index.js';
+import { UserService } from '../user/user-service.interface.js';
 
 @injectable()
 export class PlaceController extends BaseController {
@@ -17,6 +18,7 @@ export class PlaceController extends BaseController {
     @inject(Component.Logger) protected readonly logger: Logger,
     @inject(Component.PlaceService) private readonly placeService: PlaceService,
     @inject(Component.ReviewService) private readonly reviewService: ReviewService,
+    @inject(Component.UserService) private readonly userService: UserService
   ) {
     super(logger);
 
@@ -25,7 +27,7 @@ export class PlaceController extends BaseController {
     this.addRoute({
       path: '/favorites',
       method: HttpMethod.Get,
-      handler: this.getFavorites,
+      handler: this.getUserFavorites,
       middleware: [new PrivateRouteMiddleware()]
     });
     this.addRoute({
@@ -111,17 +113,34 @@ export class PlaceController extends BaseController {
   }
 
   public async update(
-    req: Request<RequestParams, RequestBody, UpdatePlaceDto>,
+    { params, tokenPayload, body }: Request<RequestParams, RequestBody, UpdatePlaceDto>,
     res: Response
   ): Promise<void> {
-    const placeId = req.params.placeId as string;
-    const body = req.body;
+    const placeId = params.placeId as string;
+    const place = await this.placeService.findById(placeId);
+    if (place?.userId?.id !== tokenPayload.id) {
+      throw new HttpError(
+        StatusCodes.FORBIDDEN,
+        'Access denied',
+        'PlaceController'
+      );
+    }
+
     const responseData = await this.placeService.update(placeId, body);
     this.ok(res, fillDTO(PlaceDetailedRdo, responseData));
   }
 
-  public async delete(req: Request, res: Response): Promise<void> {
-    const placeId = req.params.placeId;
+  public async delete({ params, tokenPayload }: Request, res: Response): Promise<void> {
+    const placeId = params.placeId;
+    const place = await this.placeService.findById(placeId);
+    if (place?.userId?.id !== tokenPayload.id) {
+      throw new HttpError(
+        StatusCodes.FORBIDDEN,
+        'Access denied',
+        'PlaceController'
+      );
+    }
+
     const result = await this.placeService.delete(placeId);
     await this.reviewService.deleteByPlaceId(placeId);
     this.noContent(res, result);
@@ -149,14 +168,22 @@ export class PlaceController extends BaseController {
     this.ok(res, fillDTO(ReviewRdo, reviews));
   }
 
-  public async getFavorites(
+  public async getUserFavorites(
     req: Request,
     res: Response
   ): Promise<void> {
-    const tokenPayload = req.tokenPayload;
-    const limit = req.query.limit ? Number(req.query.limit) : DEFAULT_PLACE_LIMIT;
-    const places = await this.placeService.findFavoritesByUser(tokenPayload.id, limit);
-    const responseData = fillDTO(PlaceFavoritesRdo, places);
+    const userEmail = req.tokenPayload.email;
+    const user = await this.userService.findByEmail(userEmail);
+    if (!user) {
+      throw new HttpError(
+        StatusCodes.NOT_FOUND,
+        `User with email ${userEmail} not found`,
+        'UserController'
+      );
+    }
+    const placeIds = user.favorites;
+    const favoritePlaces = await this.placeService.getFavoritesPlaces(placeIds);
+    const responseData = fillDTO(PlaceFavoritesRdo, favoritePlaces);
     this.ok(res, responseData);
   }
 
@@ -165,40 +192,49 @@ export class PlaceController extends BaseController {
     res: Response
   ): Promise<void> {
     const { placeId, status } = req.params;
-    const parsedStatus = parseInt(status, 10);
-    if (isNaN(parsedStatus) || (parsedStatus !== 0 && parsedStatus !== 1)) {
-      throw new HttpError(
-        StatusCodes.BAD_REQUEST,
-        'Invalid status value. Must be 0 or 1.',
-        'PlaceController'
-      );
-    }
+    const userId = req.tokenPayload.id;
 
-    const targetPlace = await this.placeService.findById(placeId);
-    if (!targetPlace) {
+    const user = await this.userService.findById(userId);
+    if (!user) {
       throw new HttpError(
         StatusCodes.NOT_FOUND,
-        `Place with id ${placeId} not found`,
+        `User with id ${userId} not found`,
         'PlaceController'
       );
     }
+    const favorites: string[] = user.favorites || [];
 
-    let message = '';
-    if (parsedStatus === 1) {
-      message = targetPlace.isFavorite ? 'Place is already marked as favorite.' : 'Place added to favorites.';
-    } else if (parsedStatus === 0) {
-      message = targetPlace.isFavorite ? 'Place removed from favorites.' : 'Place is not marked as favorite.';
+    switch (status) {
+      case '1':
+        if (favorites.includes(placeId)) {
+          throw new HttpError(
+            StatusCodes.CONFLICT,
+            'Place is already marked as favorite',
+            'PlaceController'
+          );
+        } else {
+          await this.userService.addFavoritesId(userId, placeId);
+          this.ok(res, { message: 'Place added to favorites' });
+        }
+        break;
+      case '0':
+        if (favorites.includes(placeId)) {
+          await this.userService.deleteFavoritesId(userId, placeId);
+          this.ok(res, { message: 'Place deleted from favorites' });
+        } else {
+          throw new HttpError(
+            StatusCodes.CONFLICT,
+            'Place is not marked as favorite',
+            'PlaceController'
+          );
+        }
+        break;
+      default:
+        throw new HttpError(
+          StatusCodes.BAD_REQUEST,
+          'Invalid status value. Must be 0 or 1.',
+          'PlaceController'
+        );
     }
-
-    const updatedPlace = await this.placeService.updateFavoriteField(placeId, parsedStatus);
-    if (!updatedPlace) {
-      throw new HttpError(
-        StatusCodes.NOT_FOUND,
-        `Place with id ${placeId} not found`,
-        'PlaceController'
-      );
-    }
-
-    this.ok(res, { message });
   }
 }

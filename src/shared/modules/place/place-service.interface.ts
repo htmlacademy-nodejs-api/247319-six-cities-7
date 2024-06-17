@@ -10,9 +10,9 @@ export interface PlaceService extends DocumentExists {
   delete(placeId: string): Promise<DocumentType<PlaceEntity> | null>;
   findAll(limit: number): Promise<DocumentType<PlaceEntity>[] | null>;
   findPremiumByCity(city: typeof CITIES[number]): Promise<DocumentType<PlaceEntity>[] | null>;
-  findFavoritesByUser(userId: string, limit: number): Promise<DocumentType<PlaceEntity>[] | null>;
   findByCity(city: typeof CITIES[number]): Promise<DocumentType<PlaceEntity>[] | null>;
   updatePlaceStatistics(place: PlaceEntity, rating: number): Promise<DocumentType<PlaceEntity> | null>;
   exists(documentId: string): Promise<boolean>;
   updateFavoriteField(placeId: string, status: number): Promise<DocumentType<PlaceEntity> | null>;
+  getFavoritesPlaces(placeIds: string[]): Promise<DocumentType<PlaceEntity>[]>;
 }

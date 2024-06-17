@@ -52,4 +52,12 @@ export class DefaultUserService implements UserService {
   public async updateById(userId: string, dto: UpdateUserDto): Promise<DocumentType<UserEntity> | null> {
     return this.userModel.findByIdAndUpdate(userId, dto, {new: true}).exec();
   }
+
+  public async addFavoritesId(userId: string, placeId: string): Promise<DocumentType<UserEntity> | null> {
+    return this.userModel.findByIdAndUpdate(userId, {$addToSet: {favorites: placeId}}, {new: true}).exec();
+  }
+
+  public async deleteFavoritesId(userId: string, placeId: string): Promise<DocumentType<UserEntity> | null> {
+    return this.userModel.findByIdAndUpdate(userId, {$pull: {favorites: placeId}}, {new: true}).exec();
+  }
 }

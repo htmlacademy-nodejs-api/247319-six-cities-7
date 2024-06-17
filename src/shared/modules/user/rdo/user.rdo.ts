@@ -12,4 +12,7 @@ export class UserRdo {
 
   @Expose()
   public isPro: boolean;
+
+  @Expose()
+  public favorites: [];
 }
