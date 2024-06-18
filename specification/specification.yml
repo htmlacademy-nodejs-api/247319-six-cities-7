@@ -202,7 +202,7 @@ paths:
             application/json:
               schema:
                 $ref: './error.resources.yml#/components/schemas/AuthError'
-  /places/${placeId}:
+  /places/:placeId:
     get:
       tags:
         - PLACES
@@ -272,7 +272,7 @@ paths:
             application/json:
               schema:
                 $ref: './error.resources.yml#/components/schemas/RequestError'
-  /places/premium:
+  /places/premium/city:
     get:
       tags:
         - PREMIUM
@@ -316,7 +316,7 @@ paths:
             application/json:
               schema:
                 $ref: './error.resources.yml#/components/schemas/RequestError'
-  /places/${placeId}/favorites/${status}:
+  /places/:placeId/favorites/:status:
     patch:
       tags:
         - FAVORITES
@@ -368,7 +368,7 @@ paths:
             application/json:
               schema:
                 $ref: './error.resources.yml#/components/schemas/RequestError'
-  /${placeId}/reviews:
+  /:placeId/reviews:
     get:
       tags:
         - REVIEWS

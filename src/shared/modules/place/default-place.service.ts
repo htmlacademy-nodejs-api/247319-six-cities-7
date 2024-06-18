@@ -59,6 +59,14 @@ export class DefaultPlaceService implements PlaceService {
     return this.placeModel.find({ city, isPremium: true }).populate(['userId']).exec();
   }
 
+  public async updateFavoriteField(placeId: string, status: number): Promise<DocumentType<PlaceEntity> | null> {
+    return this.placeModel.findByIdAndUpdate(placeId, {isFavorite: status === 1}, {new: true}).exec();
+  }
+
+  public async getFavoritesPlaces(placeIds: string[]): Promise<DocumentType<PlaceEntity>[]> {
+    return this.placeModel.find({ _id: { $in: placeIds } }).exec();
+  }
+
   public async updatePlaceStatistics(place: PlaceEntity, rating: number): Promise<DocumentType<PlaceEntity> | null> {
     return this.placeModel
       .findByIdAndUpdate(place.id,

@@ -13,4 +13,6 @@ export interface PlaceService extends DocumentExists {
   findByCity(city: typeof CITIES[number]): Promise<DocumentType<PlaceEntity>[] | null>;
   updatePlaceStatistics(place: PlaceEntity, rating: number): Promise<DocumentType<PlaceEntity> | null>;
   exists(documentId: string): Promise<boolean>;
+  updateFavoriteField(placeId: string, status: number): Promise<DocumentType<PlaceEntity> | null>;
+  getFavoritesPlaces(placeIds: string[]): Promise<DocumentType<PlaceEntity>[]>;
 }

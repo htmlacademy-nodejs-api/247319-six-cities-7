@@ -39,7 +39,7 @@ Content-Type: application/json
 ###
 
 ## Get place by placeId
-GET http://localhost:4000/places/664d1102a83e76469bdbe1a4 HTTP/1.1
+GET http://localhost:4000/places/664d1102a83e76469bdbe1c4 HTTP/1.1
 
 ###
 
@@ -59,11 +59,24 @@ DELETE http://localhost:4000/places/664d1102a83e76469bdbe1a9 HTTP/1.1
 ###
 
 ## Get premium places by City
-GET http://localhost:4000/places/premium/Cologne HTTP/1.1
+GET http://localhost:4000/places/premium/amsterdam HTTP/1.1
 
 ###
 
 ## Get all reviews to the place by placeId
-GET http://localhost:4000/places/664d1102a83e76469bdbe36d/reviews HTTP/1.1
+GET http://localhost:4000/places/664d1102a83e76469bdbe1a4/reviews HTTP/1.1
+
+###
+
+## Get all favorites by userId from token
+GET http://localhost:4000/places/favorites HTTP/1.1
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJlbWFpbCI6Imtla3Nzc29mYXZAbGtsbGQuY29tIiwibmFtZSI6Iktla2RzIiwiaXNQcm8iOmZhbHNlLCJpZCI6IjY2NzA0MDA2NWZjZjJlMDgzMjI3MjE5YSIsImlhdCI6MTcxODYzODU5OSwiZXhwIjoxNzE4ODExMzk5fQ.fQEvBl9CumreXaWcgUUzXqiYTppS_eOjB7N0GYe8wnc
+
+###
+
+## Change isFavorite status by placeId
+PATCH http://localhost:4000/places/664d1102a83e76469bdbe1e8/favorites/1 HTTP/1.1
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJlbWFpbCI6Imtla3Nzc29mYXZAbGtsbGQuY29tIiwibmFtZSI6Iktla2RzIiwiaXNQcm8iOmZhbHNlLCJpZCI6IjY2NzA0MDA2NWZjZjJlMDgzMjI3MjE5YSIsImlhdCI6MTcxODYzODU5OSwiZXhwIjoxNzE4ODExMzk5fQ.fQEvBl9CumreXaWcgUUzXqiYTppS_eOjB7N0GYe8wnc
+
 
 ###
