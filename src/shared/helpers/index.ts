@@ -7,7 +7,8 @@ export {
   getErrorMessage,
   getRandomSixImages,
   fillDTO,
-  createErrorObject
+  createErrorObject,
+  getFullServerPath
 } from './common.js';
 
 export { getCurrentModuleDirectoryPath } from './file-system.js';

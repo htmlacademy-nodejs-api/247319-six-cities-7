@@ -17,9 +17,6 @@ export class CreatePlaceDto {
   @IsIn(CITIES, {message: CreatePlaceValidationMessage.city.invalid})
   public city: City;
 
-  @MaxLength(256, {message: CreatePlaceValidationMessage.previewImage.maxLength})
-  public previewImage: string;
-
   @IsString({each: true, message: CreatePlaceValidationMessage.images.invalidFormat})
   @ArrayMaxSize(6)
   @ArrayMinSize(6)

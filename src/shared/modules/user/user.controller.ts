@@ -5,7 +5,7 @@ import { Component } from '../../types/index.js';
 import { Logger } from '../../libs/logger/index.js';
 import { UserService } from './user-service.interface.js';
 import { fillDTO } from '../../helpers/index.js';
-import { CreateUserDto, CreateUserRequest, LoggedUserRdo, LoginUserDto, UserRdo } from './index.js';
+import { CreateUserDto, CreateUserRequest, LoggedUserRdo, LoginUserDto, UploadAvatarRdo, UserRdo } from './index.js';
 import { StatusCodes } from 'http-status-codes';
 import { Config, RestSchema } from '../../libs/config/index.js';
 import { LoginUserRequest } from './login-user-request.type.js';
@@ -90,12 +90,8 @@ export class UserController extends BaseController {
   ) : Promise<void> {
     const user = await this.authService.verify(body);
     const token = await this.authService.authenticate(user);
-    const responseData = fillDTO(LoggedUserRdo, {
-      email: user.email,
-      token,
-    });
-
-    this.ok(res, responseData);
+    const responseData = fillDTO(LoggedUserRdo, user);
+    this.ok(res, Object.assign(responseData, {token}));
   }
 
   public async checkAuth(
@@ -115,9 +111,17 @@ export class UserController extends BaseController {
     this.ok(res, fillDTO(LoggedUserRdo, foundedUser));
   }
 
-  public async uploadAvatar(req: Request, res: Response) {
-    this.created(res, {
-      filepath: req.file?.path
-    });
+  public async uploadAvatar({params, tokenPayload, file}: Request, res: Response) {
+    const {userId} = params;
+    if (userId !== tokenPayload.id) {
+      throw new HttpError(
+        StatusCodes.FORBIDDEN,
+        'Access denied',
+        'PlaceController'
+      );
+    }
+    const updateDto = {avatarUrl: file?.filename};
+    await this.userService.updateById(userId, updateDto);
+    this.created(res, fillDTO(UploadAvatarRdo, updateDto));
   }
 }

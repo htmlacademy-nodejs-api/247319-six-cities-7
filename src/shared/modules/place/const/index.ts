@@ -11,5 +11,6 @@ export {
   MAX_GUESTS,
   MIN_PRICE,
   MAX_PRICE,
-  DEFAULT_PLACE_LIMIT
+  DEFAULT_PLACE_LIMIT,
+  FavoritesStatus,
 } from './place-const.js';

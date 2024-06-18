@@ -13,3 +13,5 @@ export { UserRdo } from './rdo/user.rdo.js';
 export { CreateUserRequest } from './create-user-request.type.js';
 export { LoginUserDto} from './dto/login-user.dto.js';
 export { LoggedUserRdo } from './rdo/logged-user.rdo.js';
+export { DEFAULT_AVATAR_FILE_NAME } from './user.constant.js';
+export { UploadAvatarRdo } from './rdo/upload-avatar.rdo.js';

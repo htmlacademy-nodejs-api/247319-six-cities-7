@@ -6,4 +6,7 @@ export class LoggedUserRdo {
 
   @Expose()
   public email: string;
+
+  @Expose()
+  public avatarUrl: string;
 }

@@ -8,9 +8,6 @@ export class CreateUserDto {
   @Length(1, 15, { message: CreateUserValidationMessages.name.lengthField })
   public name: string;
 
-  @IsString({ message: CreateUserValidationMessages.avatarUrl.invalidFormat })
-  public avatarUrl: string;
-
   @IsBoolean({message: CreateUserValidationMessages.isPro.invalidFormat})
   public isPro: boolean;
 
