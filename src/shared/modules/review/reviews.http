@@ -3,13 +3,12 @@
 
 POST http://localhost:4000/reviews HTTP/1.1
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJlbWFpbCI6Imtla3NvaWRAbGtsbGQuY29tIiwibmFtZSI6Iktla3MiLCJpc1BybyI6ZmFsc2UsImlkIjoiNjY2ZGNiNWJlNGY5OGZhY2Q0M2EwYjcxIiwiaWF0IjoxNzE4NDczODMyLCJleHAiOjE3MTg2NDY2MzJ9._txN6KpBTONTWeS2C8BHergy4KnvJIYoTm8pMeXvw4o
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJlbWFpbCI6Imtla3Nzc29mYXZAbGtsbGQuY29tIiwibmFtZSI6Iktla2RzIiwiaXNQcm8iOmZhbHNlLCJpZCI6IjY2NzA0MDA2NWZjZjJlMDgzMjI3MjE5YSIsImlhdCI6MTcxODcxNzk1MSwiZXhwIjoxNzE4ODkwNzUxfQ.jMEvEB31CTtMggt8POsWP-b91nEdMe_ByJkeGVIePRA
 {
   "placeId": "664d1102a83e76469bdbe1a4",
   "postFate": "2024-06-11T16:24:18.315Z",
-  "text": "в этyjdsqNEWNEWNEW, после похода по горам) крутой вид из окон",
-  "rating": 5,
-  "userId": "666dcb5be4f98facd43a0b71"
+  "text": "в от кексофва, после похода по горам) крутой вид из окон",
+  "rating": 2
 }
 
 ###

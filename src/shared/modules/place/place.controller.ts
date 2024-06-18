@@ -1,6 +1,6 @@
 import { inject, injectable } from 'inversify';
 import { Request, Response } from 'express';
-import { BaseController, DocumentExistsMiddleware, HttpError, HttpMethod, PrivateRouteMiddleware, RequestBody, RequestParams, ValidateDtoMiddleware, ValidateObjectIdMiddleware } from '../../libs/rest/index.js';
+import { BaseController, DocumentExistsMiddleware, HttpError, HttpMethod, PrivateRouteMiddleware, RequestBody, RequestParams, UploadFileMiddleware, ValidateDtoMiddleware, ValidateObjectIdMiddleware } from '../../libs/rest/index.js';
 import { Component } from '../../types/component.enum.js';
 import { Logger } from '../../libs/logger/index.js';
 import { PlaceService } from './place-service.interface.js';
@@ -9,16 +9,18 @@ import { CreatePlaceDto, PlaceDetailedRdo, PlaceFavoritesRdo, PlacePremiumRdo, U
 import { StatusCodes } from 'http-status-codes';
 import { CITIES } from '../../types/city.types.js';
 import { ReviewRdo, ReviewService } from '../review/index.js';
-import { DEFAULT_PLACE_LIMIT } from './const/index.js';
+import { DEFAULT_PLACE_LIMIT, FavoritesStatus } from './const/index.js';
 import { UserService } from '../user/user-service.interface.js';
-
+import { Config, RestSchema } from '../../libs/config/index.js';
+import { UploadPreviewImageRdo } from './rdo/upload-preview-image.rdo.js';
 @injectable()
 export class PlaceController extends BaseController {
   constructor(
     @inject(Component.Logger) protected readonly logger: Logger,
     @inject(Component.PlaceService) private readonly placeService: PlaceService,
     @inject(Component.ReviewService) private readonly reviewService: ReviewService,
-    @inject(Component.UserService) private readonly userService: UserService
+    @inject(Component.UserService) private readonly userService: UserService,
+    @inject(Component.Config) private readonly configService: Config<RestSchema>,
   ) {
     super(logger);
 
@@ -88,19 +90,74 @@ export class PlaceController extends BaseController {
         new DocumentExistsMiddleware(this.placeService, 'Place', 'placeId')
       ]
     });
+    this.addRoute({
+      path: '/:placeId/previewimage',
+      method: HttpMethod.Post,
+      handler: this.uploadPreviewImage,
+      middleware: [
+        new PrivateRouteMiddleware(),
+        new ValidateObjectIdMiddleware('placeId'),
+        new UploadFileMiddleware(this.configService.get('UPLOAD_DIRECTORY'), 'previewImage')
+      ]
+    });
   }
 
   public async index(req: Request, res: Response): Promise<void> {
     const limit = req.query.limit ? Number(req.query.limit) : DEFAULT_PLACE_LIMIT;
     const places = await this.placeService.findAll(limit);
-    const responseData = fillDTO(PlacePremiumRdo, places);
+    let placeIds: string[] = [];
+    if (req.tokenPayload) {
+      const userEmail = req.tokenPayload.email;
+      const user = await this.userService.findByEmail(userEmail);
+      if (!user) {
+        throw new HttpError(
+          StatusCodes.NOT_FOUND,
+          `User with email ${userEmail} not found`,
+          'PlaceController'
+        );
+      }
+      placeIds = user.favorites;
+    }
+
+    const placesWithFavorites = places?.map((place) => ({
+      ...place.toObject(),
+      isFavorite: placeIds.includes(place.id)
+    }));
+
+    const responseData = fillDTO(PlaceFavoritesRdo, placesWithFavorites);
     this.ok(res, responseData);
   }
 
   public async get(req: Request, res: Response): Promise<void> {
     const placeId = req.params.placeId;
-    const place = await this.placeService.findById(placeId);
-    const responseData = fillDTO(PlaceDetailedRdo, place);
+    const place = await this.placeService.findById(placeId)!;
+    if (!place) {
+      throw new HttpError(
+        StatusCodes.NOT_FOUND,
+        `Place with id ${placeId} not found`,
+        'PlaceController'
+      );
+    }
+    let isFavorite = false;
+    if (req.tokenPayload) {
+      const userEmail = req.tokenPayload.email;
+      const user = await this.userService.findByEmail(userEmail);
+      if (!user) {
+        throw new HttpError(
+          StatusCodes.NOT_FOUND,
+          `User with email ${userEmail} not found`,
+          'PlaceController'
+        );
+      }
+      isFavorite = (user.favorites as string[]).includes(placeId);
+    }
+
+    const placesWithFavorites = {
+      ...place.toObject(),
+      isFavorite
+    };
+
+    const responseData = fillDTO(PlaceDetailedRdo, placesWithFavorites);
     this.ok(res, responseData);
   }
 
@@ -148,8 +205,15 @@ export class PlaceController extends BaseController {
 
   public async getPremium(req: Request, res: Response): Promise<void> {
     const city = req.params.city;
-    const cityWithCapitalFirstSymbol = (city.charAt(0).toUpperCase() + city.slice(1)) as typeof CITIES[number];
-    const place = await this.placeService.findPremiumByCity(cityWithCapitalFirstSymbol);
+    if (!CITIES.includes(city as typeof CITIES[number])) {
+      throw new HttpError(
+        StatusCodes.BAD_REQUEST,
+        `Invalid city: ${city}`,
+        'PlaceController'
+      );
+    }
+    const cityWithCapitalFirstSymbol = (city.charAt(0).toUpperCase() + city.slice(1));
+    const place = await this.placeService.findPremiumByCity(cityWithCapitalFirstSymbol as typeof CITIES[number]);
     const responseData = fillDTO(PlacePremiumRdo, place);
     this.ok(res, responseData);
   }
@@ -178,7 +242,7 @@ export class PlaceController extends BaseController {
       throw new HttpError(
         StatusCodes.NOT_FOUND,
         `User with email ${userEmail} not found`,
-        'UserController'
+        'PlaceController'
       );
     }
     const placeIds = user.favorites;
@@ -205,7 +269,7 @@ export class PlaceController extends BaseController {
     const favorites: string[] = user.favorites || [];
 
     switch (status) {
-      case '1':
+      case FavoritesStatus.on:
         if (favorites.includes(placeId)) {
           throw new HttpError(
             StatusCodes.CONFLICT,
@@ -217,7 +281,7 @@ export class PlaceController extends BaseController {
           this.ok(res, { message: 'Place added to favorites' });
         }
         break;
-      case '0':
+      case FavoritesStatus.off:
         if (favorites.includes(placeId)) {
           await this.userService.deleteFavoritesId(userId, placeId);
           this.ok(res, { message: 'Place deleted from favorites' });
@@ -236,5 +300,20 @@ export class PlaceController extends BaseController {
           'PlaceController'
         );
     }
+  }
+
+  public async uploadPreviewImage({params, tokenPayload, file}: Request, res: Response) {
+    const {placeId} = params;
+    const place = await this.placeService.findById(placeId);
+    if (place?.userId?.id !== tokenPayload.id) {
+      throw new HttpError(
+        StatusCodes.FORBIDDEN,
+        'Access denied',
+        'PlaceController'
+      );
+    }
+    const updateDto = {previewImage: file?.filename};
+    await this.placeService.update(placeId, updateDto);
+    this.created(res, fillDTO(UploadPreviewImageRdo, updateDto));
   }
 }

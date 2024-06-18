@@ -2,15 +2,17 @@
 ## Get places list
 GET http://localhost:4000/places HTTP/1.1
 Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJlbWFpbCI6Imtla3Nzc29mYXZAbGtsbGQuY29tIiwibmFtZSI6Iktla2RzIiwiaXNQcm8iOmZhbHNlLCJpZCI6IjY2NzA0MDA2NWZjZjJlMDgzMjI3MjE5YSIsImlhdCI6MTcxODcxNzk1MSwiZXhwIjoxNzE4ODkwNzUxfQ.jMEvEB31CTtMggt8POsWP-b91nEdMe_ByJkeGVIePRA
 
 ###
 
 ## Add new place
 POST http://localhost:4000/places HTTP/1.1
 Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJlbWFpbCI6Imtla3Nzc29mYXZAbGtsbGQuY29tIiwibmFtZSI6Iktla2RzIiwiaXNQcm8iOmZhbHNlLCJpZCI6IjY2NzA0MDA2NWZjZjJlMDgzMjI3MjE5YSIsImlhdCI6MTcxODcxNzk1MSwiZXhwIjoxNzE4ODkwNzUxfQ.jMEvEB31CTtMggt8POsWP-b91nEdMe_ByJkeGVIePRA
 
 {
-  "title": "The Joshua Tree House",
+  "title": "The iwiwi28282e House",
   "description": "LovBLABLABLABLAourhood, lot of trendy shops, restaurants and bars in a walking distance.;The house is very good, very happy, hygienic and simple living conditions around it are also very good.",
   "postDate":"2024-05-14T21:23:48.979Z",
   "city": "Cologne",
@@ -39,27 +41,31 @@ Content-Type: application/json
 ###
 
 ## Get place by placeId
-GET http://localhost:4000/places/664d1102a83e76469bdbe1c4 HTTP/1.1
+GET http://localhost:4000/places/664d1102a83e76469bdbe1f7 HTTP/1.1
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJlbWFpbCI6Imtla3Nzc29mYXZAbGtsbGQuY29tIiwibmFtZSI6Iktla2RzIiwiaXNQcm8iOmZhbHNlLCJpZCI6IjY2NzA0MDA2NWZjZjJlMDgzMjI3MjE5YSIsImlhdCI6MTcxODcxNzk1MSwiZXhwIjoxNzE4ODkwNzUxfQ.jMEvEB31CTtMggt8POsWP-b91nEdMe_ByJkeGVIePRA
 
 ###
 
 ## Patch place by placeId
-PATCH http://localhost:4000/places/664d1102a83e76469bdbe36d HTTP/1.1
+PATCH http://localhost:4000/places/66718e7a1ee4664ab6660f22 HTTP/1.1
 Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJlbWFpbCI6Imtla3Nzc29mYXZAbGtsbGQuY29tIiwibmFtZSI6Iktla2RzIiwiaXNQcm8iOmZhbHNlLCJpZCI6IjY2NzA0MDA2NWZjZjJlMDgzMjI3MjE5YSIsImlhdCI6MTcxODcxNzk1MSwiZXhwIjoxNzE4ODkwNzUxfQ.jMEvEB31CTtMggt8POsWP-b91nEdMe_ByJkeGVIePRA
 
 {
+  "isPremium": true,
   "bedrooms": 4,
   "guests": 2
 }
 ###
 
 ## Delete place by placeId
-DELETE http://localhost:4000/places/664d1102a83e76469bdbe1a9 HTTP/1.1
+DELETE http://localhost:4000/places/66718e7a1ee4664ab6660f22 HTTP/1.1
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJlbWFpbCI6Imtla3Nzc29mYXZAbGtsbGQuY29tIiwibmFtZSI6Iktla2RzIiwiaXNQcm8iOmZhbHNlLCJpZCI6IjY2NzA0MDA2NWZjZjJlMDgzMjI3MjE5YSIsImlhdCI6MTcxODcxNzk1MSwiZXhwIjoxNzE4ODkwNzUxfQ.jMEvEB31CTtMggt8POsWP-b91nEdMe_ByJkeGVIePRA
 
 ###
 
 ## Get premium places by City
-GET http://localhost:4000/places/premium/amsterdam HTTP/1.1
+GET http://localhost:4000/places/premium/Cologne HTTP/1.1
 
 ###
 
@@ -70,13 +76,25 @@ GET http://localhost:4000/places/664d1102a83e76469bdbe1a4/reviews HTTP/1.1
 
 ## Get all favorites by userId from token
 GET http://localhost:4000/places/favorites HTTP/1.1
-Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJlbWFpbCI6Imtla3Nzc29mYXZAbGtsbGQuY29tIiwibmFtZSI6Iktla2RzIiwiaXNQcm8iOmZhbHNlLCJpZCI6IjY2NzA0MDA2NWZjZjJlMDgzMjI3MjE5YSIsImlhdCI6MTcxODYzODU5OSwiZXhwIjoxNzE4ODExMzk5fQ.fQEvBl9CumreXaWcgUUzXqiYTppS_eOjB7N0GYe8wnc
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJlbWFpbCI6Imtla3Nzc29mYXZAbGtsbGQuY29tIiwibmFtZSI6Iktla2RzIiwiaXNQcm8iOmZhbHNlLCJpZCI6IjY2NzA0MDA2NWZjZjJlMDgzMjI3MjE5YSIsImlhdCI6MTcxODcxNzk1MSwiZXhwIjoxNzE4ODkwNzUxfQ.jMEvEB31CTtMggt8POsWP-b91nEdMe_ByJkeGVIePRA
 
 ###
 
 ## Change isFavorite status by placeId
-PATCH http://localhost:4000/places/664d1102a83e76469bdbe1e8/favorites/1 HTTP/1.1
-Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJlbWFpbCI6Imtla3Nzc29mYXZAbGtsbGQuY29tIiwibmFtZSI6Iktla2RzIiwiaXNQcm8iOmZhbHNlLCJpZCI6IjY2NzA0MDA2NWZjZjJlMDgzMjI3MjE5YSIsImlhdCI6MTcxODYzODU5OSwiZXhwIjoxNzE4ODExMzk5fQ.fQEvBl9CumreXaWcgUUzXqiYTppS_eOjB7N0GYe8wnc
+PATCH http://localhost:4000/places/664d1102a83e76469bdbe1f7/favorites/1 HTTP/1.1
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJlbWFpbCI6Imtla3Nzc29mYXZAbGtsbGQuY29tIiwibmFtZSI6Iktla2RzIiwiaXNQcm8iOmZhbHNlLCJpZCI6IjY2NzA0MDA2NWZjZjJlMDgzMjI3MjE5YSIsImlhdCI6MTcxODcxNzk1MSwiZXhwIjoxNzE4ODkwNzUxfQ.jMEvEB31CTtMggt8POsWP-b91nEdMe_ByJkeGVIePRA
 
 
 ###
+
+## Upload previewImage
+POST http://localhost:4000/places/664d1102a83e76469bdbe1f7/previewimage HTTP/1.1
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJlbWFpbCI6Imtla3Nzc29mYXZAbGtsbGQuY29tIiwibmFtZSI6Iktla2RzIiwiaXNQcm8iOmZhbHNlLCJpZCI6IjY2NzA0MDA2NWZjZjJlMDgzMjI3MjE5YSIsImlhdCI6MTcxODcxNzk1MSwiZXhwIjoxNzE4ODkwNzUxfQ.jMEvEB31CTtMggt8POsWP-b91nEdMe_ByJkeGVIePRA
+Content-Type: multipart/form-data; boundary=----WebKitFormBoundary7MA4YWxkTrZu0gW
+
+------WebKitFormBoundary7MA4YWxkTrZu0gW
+Content-Disposition: form-data; name="previewImage"; filename="123.jpg"
+Content-Type: image/jpg
+
+< C:/Users/Roman/Desktop/123.jpg
+------WebKitFormBoundary7MA4YWxkTrZu0gW--
